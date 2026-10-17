@@ -1,6 +1,6 @@
 # BASICS public website
 
-This folder is the complete Vercel website. It is a static, read-only frontend; it does not contain the Laravel staff application or resident database.
+This folder is the complete Vercel website. Its public homepage matches the locally hosted Barangay Uyong homepage design, while remaining a static, read-only frontend. It does not contain the Laravel staff application or resident database.
 
 ## Supabase setup
 

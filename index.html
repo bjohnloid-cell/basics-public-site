@@ -1,7 +1,7 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Official community information and announcements for Barangay Uyong, Labrador, Pangasinan.">
     <meta name="theme-color" content="#07152e">
@@ -13,104 +13,247 @@
 </head>
 <body>
     <header class="site-header">
-        <a class="brand" href="#home" aria-label="Barangay Uyong home">
-            <img src="./images/barangay-uyong-logo.png" alt="">
-            <span><strong data-field="name">Barangay Uyong</strong><small data-field="location">Labrador, Pangasinan</small></span>
-        </a>
-        <nav aria-label="Main navigation">
-            <a href="#home">Home</a>
-            <a href="#announcements">Announcements</a>
-            <a href="#about">About</a>
-            <a href="#staff">Staff</a>
-            <a href="#services">Services</a>
-            <a href="#faqs">FAQs</a>
-            <a href="#contact">Contact</a>
-        </nav>
+        <div class="header-inner">
+            <a class="brand" href="#home" aria-label="Barangay Uyong home">
+                <img src="./images/barangay-uyong-logo.png" alt="">
+                <span>
+                    <span class="brand-name" data-field="name">Barangay Uyong</span>
+                    <span class="brand-place" data-field="location">Labrador, Pangasinan</span>
+                </span>
+            </a>
+            <nav class="nav-links" aria-label="Main navigation">
+                <a href="#home">Home</a>
+                <a href="#announcements">Announcements</a>
+                <a href="#about">About</a>
+                <a href="#staff">Staff</a>
+                <a href="#services">Services</a>
+                <a href="#faqs">FAQs</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
     </header>
 
     <main>
         <section class="hero" id="home">
-            <div class="hero-copy">
-                <p class="eyebrow" data-field="location">Labrador · Pangasinan</p>
-                <h1>Welcome to our <span>community.</span></h1>
-                <p>A home for community updates, barangay services, and the people of <span data-field="name">Barangay Uyong</span>.</p>
-                <a class="button" href="#announcements">View announcements <span aria-hidden="true">↓</span></a>
-                <a class="button button-light" href="#about">Discover our barangay</a>
-            </div>
-            <div class="hero-seal">
-                <img src="./images/barangay-uyong-logo.png" alt="Official seal of Barangay Uyong">
-                <p><strong>Serbisyo at pagkakaisa</strong>Working together for a welcoming, informed, and connected community.</p>
-            </div>
-        </section>
-
-        <section class="section about" id="about">
-            <img class="municipal-seal" src="./images/labrador-seal-1040x1040.png" alt="Municipality of Labrador seal" loading="lazy">
-            <div>
-                <p class="eyebrow">A little about our community</p>
-                <h2><span data-field="name">Barangay Uyong</span>, <span data-field="municipality">Labrador</span></h2>
-                <p><span data-field="name">Barangay Uyong</span> is one of the communities in <span data-field="municipality">Labrador</span>, <span data-field="province">Pangasinan</span>. This page is a convenient place to find public updates and basic information about getting assistance from the barangay.</p>
-                <p>Residents are welcome to contact or visit the barangay office for guidance about the service they need.</p>
-                <a class="text-link" href="#contact">Get in touch →</a>
-            </div>
-        </section>
-
-        <section class="section soft" id="staff">
-            <div class="section-heading">
-                <p class="eyebrow">Meet the team</p>
-                <h2>Barangay staff</h2>
-                <p>Meet the active personnel serving the community.</p>
-            </div>
-            <div id="staff-list" class="staff-grid"><p class="empty-state">Staff information is not currently available.</p></div>
-        </section>
-
-        <section class="section" id="services">
-            <div class="section-heading">
-                <p class="eyebrow">Here to help</p>
-                <h2>Barangay services and information</h2>
-                <p>The barangay office can confirm current requirements and next steps.</p>
-            </div>
-            <div class="service-grid">
-                <article class="card"><span class="card-icon" aria-hidden="true">⌂</span><h3>Resident services</h3><p>Ask the barangay office about resident records, corrections, and the appropriate assistance for your concern.</p></article>
-                <article class="card"><span class="card-icon" aria-hidden="true">▤</span><h3>Certificates</h3><p>Visit the barangay office to request a certificate and confirm the requirements for your purpose.</p></article>
-                <article class="card"><span class="card-icon" aria-hidden="true">♡</span><h3>Community assistance</h3><p>Contact the barangay for guidance about community programs and available assistance.</p></article>
-            </div>
-        </section>
-
-        <section class="section soft" id="faqs">
-            <div class="section-heading">
-                <p class="eyebrow">Good to know</p>
-                <h2>Frequently asked questions</h2>
-            </div>
-            <details><summary>Paano magpa-update o magpa-correct ng resident record?</summary><p>Makipag-ugnayan o pumunta sa barangay hall at dalhin ang valid ID at mga dokumentong sumusuporta sa pagbabago.</p></details>
-            <details><summary>Paano humingi ng certificate sa pamamagitan ng BASICS?</summary><p>Sa kasalukuyan, walk-in ang proseso ng pag-request. Pumunta sa barangay hall upang magpa-assist sa staff.</p></details>
-            <details><summary>May bayad ba ang mga certificate at gaano katagal ang proseso?</summary><p>Libre ang Barangay Clearance. Maaaring mag-iba ang bayad para sa ibang certificate; itanong sa barangay office ang kasalukuyang requirements at schedule.</p></details>
-        </section>
-
-        <section class="section announcements" id="announcements">
-            <div class="section-heading">
-                <p class="eyebrow">Stay informed</p>
-                <h2>Latest announcements</h2>
-                <p>Updates shared by the Barangay Uyong team.</p>
-            </div>
-            <p id="announcement-status" class="status" role="status" aria-live="polite">Loading public updates…</p>
-            <div id="announcement-list" class="announcement-grid"></div>
-        </section>
-
-        <section class="contact" id="contact">
-            <div>
-                <p class="eyebrow">We’re here to help</p>
-                <h2>Connect with your barangay.</h2>
-                <p>For help with barangay services or community concerns, contact or visit the office. Staff can provide guidance about the correct process and current requirements.</p>
-                <div class="contact-list">
-                    <span data-contact="address">Uyong, Labrador, Pangasinan 2402</span>
-                    <a data-contact="phone" hidden></a>
-                    <a data-contact="email" hidden></a>
+            <div class="hero-inner">
+                <div>
+                    <p class="eyebrow" data-field="region">Labrador · Pangasinan</p>
+                    <h1>Welcome to our <span>community.</span></h1>
+                    <p class="hero-copy">A home for community updates, barangay services, and the people of <span data-field="name">Barangay Uyong</span>.</p>
+                    <div class="hero-actions">
+                        <a class="button button-gold" href="#announcements">View announcements <span aria-hidden="true">↓</span></a>
+                        <a class="button button-outline" href="#about">Discover Barangay Uyong</a>
+                    </div>
+                </div>
+                <div class="hero-art" aria-label="Official Barangay Uyong seal">
+                    <div class="hero-orbit" aria-hidden="true"></div>
+                    <img class="hero-seal" src="./images/barangay-uyong-logo.png" alt="Official seal of Barangay Uyong">
+                    <div class="hero-note"><strong>Serbisyo at pagkakaisa</strong>Working together for a welcoming, informed, and connected community.</div>
                 </div>
             </div>
-            <img src="./images/barangay-uyong-logo.png" alt="" loading="lazy">
+        </section>
+
+        <section class="section" id="about">
+            <div class="section-inner about-grid">
+                <div class="about-seal-wrap">
+                    <img src="./images/labrador-seal-1040x1040.png" alt="Municipality of Labrador seal" loading="lazy">
+                </div>
+                <div class="about-copy">
+                    <p class="section-kicker">A little about our community</p>
+                    <h2><span data-field="name">Barangay Uyong</span>, <span data-field="municipality">Labrador</span></h2>
+                    <p><span data-field="name">Barangay Uyong</span> is one of the communities in <span data-field="municipality">Labrador</span>, <span data-field="province">Pangasinan</span>. This page is a convenient place to find public updates and basic information about getting assistance from the barangay.</p>
+                    <p class="about-detail">Barangay services are supported by staff who help maintain community records, respond to resident concerns, and share important notices. Residents are welcome to contact or visit the barangay office for guidance about the service they need.</p>
+                    <a class="button" href="#contact">Get in touch <span aria-hidden="true">→</span></a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section staff-section" id="staff">
+            <div class="section-inner">
+                <div class="section-heading">
+                    <p class="section-kicker">Meet the team</p>
+                    <h2>Barangay staff</h2>
+                    <p>Meet the active personnel serving the Barangay Uyong community.</p>
+                </div>
+                <div id="staff-list" class="staff-grid">
+                    <p class="empty-staff">Staff information is not currently available.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section services-section" id="services">
+            <div class="section-inner">
+                <div class="section-heading">
+                    <p class="section-kicker">Here to help</p>
+                    <h2>Barangay services and information</h2>
+                    <p>BASICS helps barangay staff organize resident records and service requests. The public information below is a starting point; the barangay office can confirm current requirements and next steps.</p>
+                </div>
+                <div class="service-grid">
+                    <article class="service-card">
+                        <div class="service-icon"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                        <h3>Resident services</h3>
+                        <p>Ask the barangay office about resident records, corrections, and the appropriate assistance for your concern.</p>
+                    </article>
+                    <article class="service-card">
+                        <div class="service-icon"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></svg></div>
+                        <h3>Certificates and requests</h3>
+                        <p>Contact the office to check which certificates are available, what documents to prepare, and how requests are processed.</p>
+                    </article>
+                    <article class="service-card">
+                        <div class="service-icon"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 18-5v12L3 13z"/><path d="M11.6 15.4 13 21l4-1-2.2-5.4M3 11v2"/></svg></div>
+                        <h3>Community updates</h3>
+                        <p>Check the latest published notices, activities, and important community announcements.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section help-section" id="resident-guide">
+            <div class="section-inner">
+                <div class="help-panel">
+                    <div class="help-intro">
+                        <p class="section-kicker">A simple guide</p>
+                        <h2>Getting help from the barangay</h2>
+                        <p>Not sure where to start? These steps can help you prepare before contacting or visiting the office.</p>
+                    </div>
+                    <div>
+                        <div class="help-steps">
+                            <article class="help-step">
+                                <span class="help-step-number">1</span>
+                                <div><h3>Check the latest announcements</h3><p>Look for public notices and updates here first. They may include dates or instructions relevant to your concern.</p></div>
+                            </article>
+                            <article class="help-step">
+                                <span class="help-step-number">2</span>
+                                <div><h3>Tell the office what assistance you need</h3><p>Briefly explain your concern or the certificate or record you are asking about so staff can guide you to the right next step.</p></div>
+                            </article>
+                            <article class="help-step">
+                                <span class="help-step-number">3</span>
+                                <div><h3>Confirm requirements before your visit</h3><p>Ask about required documents, office availability, and any applicable fees before making a trip.</p></div>
+                            </article>
+                        </div>
+                        <p class="information-note">Requirements, schedules, and fees can vary by service. Please confirm the latest details directly with the Barangay Uyong office.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section faq-section" id="faqs">
+            <div class="section-inner">
+                <div class="section-heading">
+                    <p class="section-kicker">Quick answers</p>
+                    <h2>Frequently Asked Questions</h2>
+                    <p>Learn how BASICS supports barangay services, how to ask about resident records and certificate requests, and where to find the latest information.</p>
+                </div>
+                <div class="faq-list">
+                    <details class="faq-item">
+                        <summary>Ano ang BASICS?</summary>
+                        <div class="faq-answer">
+                            <p>Ang BASICS ay ang management system na ginagamit ng Barangay Uyong staff sa pag-aayos ng resident records, certificate requests, announcements, at iba pang barangay records. Nakakatulong ito sa staff na maitala at mapamahalaan ang mga serbisyong ito nang mas maayos.</p>
+                            <p>Layunin nitong makatulong sa mas maayos na paghahatid ng impormasyon at serbisyo sa komunidad.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Paano magpa-update o magpa-correct ng resident record?</summary>
+                        <div class="faq-answer">
+                            <p>Makipag-ugnayan o personal na pumunta sa Barangay Uyong office at ipaliwanag kung aling detalye sa record ang kailangang idagdag o itama. Makakatulong kung maibibigay mo ang tamang impormasyon at anumang dokumentong magpapatunay nito upang ma-review ng staff ang request.</p>
+                            <p>Iba-iba ang maaaring kailanganin depende sa babaguhin. Kakausapin ka ng staff tungkol sa verification at sa susunod na hakbang bago i-update ang record.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Anong mga certificate ang pinoproseso sa BASICS?</summary>
+                        <div class="faq-answer">
+                            <p>Kabilang sa mga certificate type na nakatala sa BASICS ang Barangay Clearance, Certificate of Indigency, Certificate of Residency, Certificate of Good Moral Character, Barangay Business Clearance, at Certificate of Solo Parent.</p>
+                            <p>Magkakaiba ang layunin at maaaring requirements ng bawat certificate. Ipaalam sa barangay office kung anong dokumento ang kailangan mo at para saan ito upang magabayan ka kung aling uri ang dapat i-request at kung maaari itong iproseso.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Paano humingi ng certificate sa pamamagitan ng BASICS?</summary>
+                        <div class="faq-answer">
+                            <p>Sa kasalukuyan, walk-in ang proseso ng pag-request. Pumunta sa Barangay Uyong office at sabihin sa staff kung anong certificate ang kailangan at kung para saan ito.</p>
+                            <p>Tutulungan ka ng staff na mahanap o ma-verify ang iyong resident record at ipapaliwanag ang mga susunod na hakbang para sa request.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Anong requirements at valid ID ang kailangan?</summary>
+                        <div class="faq-answer">
+                            <p>Magdala ng valid ID upang makatulong sa pagkumpirma ng iyong pagkakakilanlan at resident record. Tinatanggap ang anumang valid ID.</p>
+                            <p>Maaaring may karagdagang kailangang detalye depende sa uri ng certificate. Ipapaliwanag ito ng staff kapag nag-request ka sa barangay office.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Paano ko malalaman ang status ng certificate request?</summary>
+                        <div class="faq-answer">
+                            <p>Dahil walk-in ang kasalukuyang proseso, magtanong sa barangay office tungkol sa iyong request. Ibigay ang iyong pangalan at ang uri ng certificate na ni-request upang matulungan ka ng staff.</p>
+                            <p>Karaniwang mabilis ang proseso kung rehistradong residente ka at walang blotter record. Kung may blotter record, ang administrator ang magpapasya kung paano ipagpapatuloy ang request.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Saan makikita ang announcements at updates?</summary>
+                        <div class="faq-answer">
+                            <p>Makikita sa seksyong <a href="#announcements">Latest announcements</a> ang mga public notice at update na inilathala ng Barangay Uyong. Basahin ang buong announcement para sa mga petsa, detalye, o tagubiling nakasaad doon.</p>
+                            <p>Kung hindi makita rito ang impormasyong hinahanap mo o kailangan mo ng paglilinaw, makipag-ugnayan sa barangay office.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>May bayad ba ang mga certificate at gaano katagal ang proseso?</summary>
+                        <div class="faq-answer">
+                            <p>Libre ang Barangay Clearance. Maaaring mag-iba ang bayad para sa ibang certificate depende sa uri ng dokumentong kailangan.</p>
+                            <p>Karaniwang mabilis ang pagproseso kung rehistradong residente ka. Kung may blotter record, kailangang suriin ito at administrator ang magpapasya bago maipagpatuloy ang request.</p>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <section class="section announcements-section" id="announcements">
+            <div class="section-inner">
+                <div class="section-heading">
+                    <p class="section-kicker">Stay informed</p>
+                    <h2>Latest announcements</h2>
+                    <p>Updates shared by the Barangay Uyong team.</p>
+                </div>
+                <div id="announcement-list" class="announcement-grid"></div>
+                <p id="announcement-status" class="empty-announcements" role="status" aria-live="polite">Loading public updates…</p>
+            </div>
+        </section>
+
+        <section class="section contact-section" id="contact">
+            <div class="section-inner">
+                <div class="contact-card">
+                    <div>
+                        <p class="section-kicker">We’re here to help</p>
+                        <h2>Connect with your barangay.</h2>
+                        <p>For help with barangay services, resident records, or community concerns, contact or visit the office. Staff can provide guidance about the correct process and current requirements.</p>
+                        <div class="contact-details">
+                            <span id="contact-address">
+                                <svg class="icon-svg contact-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                                <span data-contact="address"><span data-contact-value>Uyong, Labrador, Pangasinan 2402</span></span>
+                            </span>
+                            <a data-contact="phone" hidden>
+                                <svg class="icon-svg contact-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.4 19.4 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7l.5 2.8a2 2 0 0 1-.6 1.7L7.7 9.5a16 16 0 0 0 6.8 6.8l1.3-1.3a2 2 0 0 1 1.7-.6l2.8.5a2 2 0 0 1 1.7 2Z"/></svg>
+                                <span data-contact-value></span>
+                            </a>
+                            <a data-contact="email" hidden>
+                                <svg class="icon-svg contact-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+                                <span data-contact-value></span>
+                            </a>
+                        </div>
+                    </div>
+                    <a class="button" href="mailto:basicbarangay2402@gmail.com" data-contact-cta>Contact the barangay <span aria-hidden="true">→</span></a>
+                </div>
+            </div>
         </section>
     </main>
 
-    <footer><span><span data-field="name">Barangay Uyong</span> · <span data-field="location">Labrador, Pangasinan</span></span><span>Powered by BASICS</span><a href="#home">Back to top ↑</a></footer>
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <img src="./images/barangay-uyong-logo.png" alt="" loading="lazy">
+                <span><span data-field="name">Barangay Uyong</span> · <span data-field="location">Labrador, Pangasinan</span></span>
+            </div>
+            <span>Powered by BASICS</span>
+            <a href="#home">Back to top ↑</a>
+        </div>
+    </footer>
 </body>
 </html>

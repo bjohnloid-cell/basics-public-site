@@ -16,7 +16,7 @@
 
         if (!staff.length) {
             const empty = document.createElement('p');
-            empty.className = 'empty-state';
+            empty.className = 'empty-staff';
             empty.textContent = 'Staff information is not currently available.';
             staffList.append(empty);
             return;
@@ -39,10 +39,11 @@
 
         if (!items.length) {
             status.textContent = 'There are no published announcements right now. Please check again soon.';
+            status.hidden = false;
             return;
         }
 
-        status.textContent = '';
+        status.hidden = true;
         items.forEach((item) => {
             const card = document.createElement('article');
             card.className = 'announcement-card';
@@ -58,7 +59,18 @@
                 const placeholder = document.createElement('div');
                 placeholder.className = 'announcement-placeholder';
                 placeholder.setAttribute('aria-hidden', 'true');
-                placeholder.textContent = '▤';
+                const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                icon.setAttribute('class', 'icon-svg');
+                icon.setAttribute('viewBox', '0 0 24 24');
+                [
+                    'm3 11 18-5v12L3 13z',
+                    'M11.6 15.4 13 21l4-1-2.2-5.4M3 11v2'
+                ].forEach((pathData) => {
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', pathData);
+                    icon.append(path);
+                });
+                placeholder.append(icon);
                 card.append(placeholder);
             }
 
@@ -73,7 +85,7 @@
                     month: 'long',
                     day: '2-digit',
                     year: 'numeric'
-                }).format(publishedAt);
+                }).format(publishedAt).toUpperCase();
             }
 
             const title = document.createElement('h3');
@@ -89,8 +101,29 @@
 
             const body = document.createElement('p');
             body.className = 'announcement-copy';
-            body.textContent = (item.body || '').replace(/<[^>]*>/g, '').slice(0, 145);
+            const fullText = (item.body || '').replace(/<[^>]*>/g, '');
+            body.textContent = fullText.slice(0, 145);
             content.append(body);
+
+            if (fullText.length > 145) {
+                const fullBody = document.createElement('p');
+                fullBody.className = 'announcement-copy announcement-full-copy';
+                fullBody.hidden = true;
+                fullBody.textContent = fullText;
+                content.append(fullBody);
+
+                const more = document.createElement('button');
+                more.className = 'announcement-link';
+                more.type = 'button';
+                more.textContent = 'Read announcement →';
+                more.addEventListener('click', () => {
+                    const expanded = fullBody.hidden;
+                    fullBody.hidden = !expanded;
+                    more.textContent = expanded ? 'Show less ↑' : 'Read announcement →';
+                });
+                content.append(more);
+            }
+
             card.append(content);
             announcements.append(card);
         });
@@ -103,7 +136,7 @@
             return;
         }
         link.hidden = false;
-        link.textContent = value;
+        link.querySelector('[data-contact-value]').textContent = value;
         link.href = `${prefix}${value.replace(/[^\d+]/g, '')}`;
         if (prefix === 'mailto:') link.href = `${prefix}${value}`;
     };
@@ -138,11 +171,15 @@
             setText('[data-field="municipality"]', municipality);
             setText('[data-field="province"]', province);
             setText('[data-field="location"]', `${municipality}, ${province}`);
+            setText('[data-field="region"]', `${municipality} · ${province}`);
 
-            const address = document.querySelector('[data-contact="address"]');
+            const address = document.querySelector('[data-contact="address"] [data-contact-value]');
             address.textContent = barangay.address || `Uyong, ${municipality}, ${province}`;
             setContact('[data-contact="phone"]', barangay.contact_number, 'tel:');
             setContact('[data-contact="email"]', barangay.email, 'mailto:');
+            const contactCta = document.querySelector('[data-contact-cta]');
+            contactCta.hidden = !barangay.email;
+            if (barangay.email) contactCta.href = `mailto:${barangay.email}`;
             renderStaff(staff);
             renderAnnouncements(items);
         } catch (error) {
