@@ -1,0 +1,67 @@
+:root{color-scheme:light;--navy:#07152e;--blue:#0f5eff;--blue-light:#e8f0ff;--ink:#172033;--muted:#64748b;--paper:#eef1f5;--line:#dbe3ee;--white:#fff}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Segoe UI",Arial,sans-serif;line-height:1.65}
+a{color:inherit}
+.site-header{position:sticky;z-index:2;top:0;display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:78px;padding:12px max(24px,calc((100% - 1144px)/2));border-bottom:1px solid #07152e12;background:#ffffffed;backdrop-filter:blur(12px)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.brand img{width:48px;height:48px;object-fit:contain}
+.brand strong,.brand small{display:block}
+.brand strong{color:var(--navy);font-size:16px;line-height:1.25}
+.brand small{margin-top:3px;color:var(--muted);font-size:12px}
+nav{display:flex;flex-wrap:wrap;gap:18px}
+nav a{color:#475569;font-size:13px;font-weight:700;text-decoration:none}
+nav a:hover,.text-link:hover{color:var(--blue)}
+.hero{display:grid;grid-template-columns:1.25fr .75fr;align-items:center;gap:40px;min-height:470px;padding:70px max(24px,calc((100% - 1088px)/2));background:linear-gradient(120deg,#07152e,#12336d);color:var(--white)}
+.hero-copy{max-width:650px}
+.eyebrow{margin:0 0 10px;color:var(--blue);font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.hero .eyebrow{color:#8bbcff}
+h1,h2,h3,p{margin-top:0}
+h1{max-width:640px;margin-bottom:18px;font-size:clamp(42px,6vw,68px);letter-spacing:-.05em;line-height:1.04}
+h1 span{color:#8bbcff}
+.hero-copy>p:not(.eyebrow){max-width:540px;color:#ffffffc7;font-size:17px}
+.button{display:inline-flex;align-items:center;gap:12px;min-height:46px;margin:16px 8px 0 0;padding:0 18px;border-radius:8px;background:var(--blue);color:white;font-size:13px;font-weight:750;text-decoration:none}
+.button-light{border:1px solid #ffffff60;background:#ffffff0b}
+.hero-seal{display:grid;justify-items:center;text-align:center}
+.hero-seal img{width:min(210px,60vw);aspect-ratio:1;border:8px solid white;border-radius:50%;background:white;object-fit:cover;box-shadow:0 16px 40px #0004}
+.hero-seal p{max-width:270px;margin:16px 0 0;color:#ffffffc7;font-size:12px}
+.hero-seal strong{display:block;color:white;font-size:14px}
+.section{max-width:1144px;margin:0 auto;padding:72px 24px}
+.about{display:grid;grid-template-columns:.7fr 1.3fr;align-items:center;gap:56px}
+.municipal-seal{width:min(270px,100%);justify-self:center;border:1px solid var(--line);border-radius:22px;background:#f8fbff;object-fit:contain}
+h2{margin-bottom:12px;color:var(--navy);font-size:clamp(29px,4vw,40px);letter-spacing:-.035em;line-height:1.15}
+.about p:not(.eyebrow),.section-heading>p:last-child{color:var(--muted)}
+.text-link{display:inline-block;margin-top:8px;color:var(--blue);font-weight:750;text-decoration:none}
+.soft{max-width:none;background:#f6f8fc}
+.section-heading{max-width:650px;margin:0 auto 30px;text-align:center}
+.section-heading .eyebrow{margin-bottom:9px}
+.staff-grid,.service-grid,.announcement-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;max-width:1096px;margin:0 auto}
+.staff-card,.card,.announcement-card{overflow:hidden;border:1px solid #07152e12;border-radius:14px;background:white;box-shadow:0 8px 24px #07152e0b}
+.staff-card,.card{padding:24px}
+.staff-card h3,.card h3,.announcement-card h3{margin-bottom:5px;color:var(--navy);font-size:17px}
+.staff-card p,.card p,.announcement-copy{margin-bottom:0;color:var(--muted);font-size:14px}
+.card-icon{display:grid;width:42px;height:42px;margin-bottom:18px;place-items:center;border-radius:12px;background:var(--blue-light);color:var(--blue);font-size:23px}
+details{max-width:800px;margin:10px auto;padding:17px 20px;border:1px solid var(--line);border-radius:10px;background:white}
+summary{color:var(--navy);font-weight:700;cursor:pointer}
+details p{margin:12px 0 0;color:var(--muted)}
+.announcements{padding-top:70px}
+.announcement-card{display:flex;min-height:100%;flex-direction:column}
+.announcement-image,.announcement-placeholder{width:100%;height:170px;object-fit:cover}
+.announcement-placeholder{display:grid;place-items:center;background:linear-gradient(140deg,#e8f0ff,#f8fbff);color:var(--blue);font-size:32px}
+.announcement-body{padding:20px}
+.announcement-date{display:block;margin-bottom:9px;color:var(--muted);font-size:12px}
+.announcement-slogan{margin:-2px 0 10px;color:var(--blue);font-size:14px;font-weight:700}
+.announcement-copy{display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:4}
+.status,.empty-state{grid-column:1/-1;margin:0 auto 18px;color:var(--muted);text-align:center}
+.contact{display:flex;align-items:center;justify-content:space-between;gap:28px;padding:54px max(24px,calc((100% - 1096px)/2));background:#07152e;color:white}
+.contact h2{color:white}
+.contact>div>p:not(.eyebrow){max-width:620px;color:#ffffffbd}
+.contact .eyebrow{color:#8bbcff}
+.contact>img{width:100px;height:100px;border:4px solid white;border-radius:50%;background:white;object-fit:cover}
+.contact-list{display:flex;flex-wrap:wrap;gap:12px 24px;margin-top:18px;color:#ffffffd5;font-size:14px}
+.contact-list a{color:inherit}
+footer{display:flex;justify-content:space-between;gap:18px;padding:20px max(24px,calc((100% - 1096px)/2));background:#041024;color:#ffffffbd;font-size:12px}
+footer a{color:white}
+@media(max-width:820px){.site-header{align-items:flex-start;flex-direction:column;gap:10px;padding:12px 20px}.site-header nav{gap:10px 16px}.hero{grid-template-columns:1fr;gap:28px;padding:56px 24px}.hero-seal{display:none}.about{grid-template-columns:1fr;gap:26px}.municipal-seal{width:160px}.staff-grid,.service-grid,.announcement-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:540px){.staff-grid,.service-grid,.announcement-grid{grid-template-columns:1fr}.contact{align-items:flex-start}.contact>img{width:64px;height:64px}footer{flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important}}

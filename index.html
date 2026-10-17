@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Official community information and announcements for Barangay Uyong, Labrador, Pangasinan.">
+    <meta name="theme-color" content="#07152e">
+    <title>Barangay Uyong | Community Website</title>
+    <link rel="icon" type="image/png" href="./images/barangay-uyong-logo.png">
+    <link rel="stylesheet" href="./site.css">
+    <script src="./config.js"></script>
+    <script src="./site.js" defer></script>
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="#home" aria-label="Barangay Uyong home">
+            <img src="./images/barangay-uyong-logo.png" alt="">
+            <span><strong data-field="name">Barangay Uyong</strong><small data-field="location">Labrador, Pangasinan</small></span>
+        </a>
+        <nav aria-label="Main navigation">
+            <a href="#home">Home</a>
+            <a href="#announcements">Announcements</a>
+            <a href="#about">About</a>
+            <a href="#staff">Staff</a>
+            <a href="#services">Services</a>
+            <a href="#faqs">FAQs</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" id="home">
+            <div class="hero-copy">
+                <p class="eyebrow" data-field="location">Labrador · Pangasinan</p>
+                <h1>Welcome to our <span>community.</span></h1>
+                <p>A home for community updates, barangay services, and the people of <span data-field="name">Barangay Uyong</span>.</p>
+                <a class="button" href="#announcements">View announcements <span aria-hidden="true">↓</span></a>
+                <a class="button button-light" href="#about">Discover our barangay</a>
+            </div>
+            <div class="hero-seal">
+                <img src="./images/barangay-uyong-logo.png" alt="Official seal of Barangay Uyong">
+                <p><strong>Serbisyo at pagkakaisa</strong>Working together for a welcoming, informed, and connected community.</p>
+            </div>
+        </section>
+
+        <section class="section about" id="about">
+            <img class="municipal-seal" src="./images/labrador-seal-1040x1040.png" alt="Municipality of Labrador seal" loading="lazy">
+            <div>
+                <p class="eyebrow">A little about our community</p>
+                <h2><span data-field="name">Barangay Uyong</span>, <span data-field="municipality">Labrador</span></h2>
+                <p><span data-field="name">Barangay Uyong</span> is one of the communities in <span data-field="municipality">Labrador</span>, <span data-field="province">Pangasinan</span>. This page is a convenient place to find public updates and basic information about getting assistance from the barangay.</p>
+                <p>Residents are welcome to contact or visit the barangay office for guidance about the service they need.</p>
+                <a class="text-link" href="#contact">Get in touch →</a>
+            </div>
+        </section>
+
+        <section class="section soft" id="staff">
+            <div class="section-heading">
+                <p class="eyebrow">Meet the team</p>
+                <h2>Barangay staff</h2>
+                <p>Meet the active personnel serving the community.</p>
+            </div>
+            <div id="staff-list" class="staff-grid"><p class="empty-state">Staff information is not currently available.</p></div>
+        </section>
+
+        <section class="section" id="services">
+            <div class="section-heading">
+                <p class="eyebrow">Here to help</p>
+                <h2>Barangay services and information</h2>
+                <p>The barangay office can confirm current requirements and next steps.</p>
+            </div>
+            <div class="service-grid">
+                <article class="card"><span class="card-icon" aria-hidden="true">⌂</span><h3>Resident services</h3><p>Ask the barangay office about resident records, corrections, and the appropriate assistance for your concern.</p></article>
+                <article class="card"><span class="card-icon" aria-hidden="true">▤</span><h3>Certificates</h3><p>Visit the barangay office to request a certificate and confirm the requirements for your purpose.</p></article>
+                <article class="card"><span class="card-icon" aria-hidden="true">♡</span><h3>Community assistance</h3><p>Contact the barangay for guidance about community programs and available assistance.</p></article>
+            </div>
+        </section>
+
+        <section class="section soft" id="faqs">
+            <div class="section-heading">
+                <p class="eyebrow">Good to know</p>
+                <h2>Frequently asked questions</h2>
+            </div>
+            <details><summary>Paano magpa-update o magpa-correct ng resident record?</summary><p>Makipag-ugnayan o pumunta sa barangay hall at dalhin ang valid ID at mga dokumentong sumusuporta sa pagbabago.</p></details>
+            <details><summary>Paano humingi ng certificate sa pamamagitan ng BASICS?</summary><p>Sa kasalukuyan, walk-in ang proseso ng pag-request. Pumunta sa barangay hall upang magpa-assist sa staff.</p></details>
+            <details><summary>May bayad ba ang mga certificate at gaano katagal ang proseso?</summary><p>Libre ang Barangay Clearance. Maaaring mag-iba ang bayad para sa ibang certificate; itanong sa barangay office ang kasalukuyang requirements at schedule.</p></details>
+        </section>
+
+        <section class="section announcements" id="announcements">
+            <div class="section-heading">
+                <p class="eyebrow">Stay informed</p>
+                <h2>Latest announcements</h2>
+                <p>Updates shared by the Barangay Uyong team.</p>
+            </div>
+            <p id="announcement-status" class="status" role="status" aria-live="polite">Loading public updates…</p>
+            <div id="announcement-list" class="announcement-grid"></div>
+        </section>
+
+        <section class="contact" id="contact">
+            <div>
+                <p class="eyebrow">We’re here to help</p>
+                <h2>Connect with your barangay.</h2>
+                <p>For help with barangay services or community concerns, contact or visit the office. Staff can provide guidance about the correct process and current requirements.</p>
+                <div class="contact-list">
+                    <span data-contact="address">Uyong, Labrador, Pangasinan 2402</span>
+                    <a data-contact="phone" hidden></a>
+                    <a data-contact="email" hidden></a>
+                </div>
+            </div>
+            <img src="./images/barangay-uyong-logo.png" alt="" loading="lazy">
+        </section>
+    </main>
+
+    <footer><span><span data-field="name">Barangay Uyong</span> · <span data-field="location">Labrador, Pangasinan</span></span><span>Powered by BASICS</span><a href="#home">Back to top ↑</a></footer>
+</body>
+</html>
