@@ -36,6 +36,7 @@
 
     const renderAnnouncements = (items = []) => {
         announcements.replaceChildren();
+        announcements.classList.toggle('announcement-grid-single', items.length === 1);
 
         if (!items.length) {
             status.textContent = 'There are no published announcements right now. Please check again soon.';
