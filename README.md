@@ -4,10 +4,12 @@ This folder is the complete Vercel website. Its public homepage matches the loca
 
 ## Supabase setup
 
-1. Create a Supabase project and run [`supabase/public-site.sql`](supabase/public-site.sql) in its SQL Editor.
+1. Create a Supabase project and run [`supabase/public-site.sql`](supabase/public-site.sql) in its SQL Editor. If you already set up the public site, run the updated SQL file again to add the public concern inbox. It creates an insert-only public policy; only the Laravel service-role key can read or update submitted concerns.
 2. In this folder's `config.js`, set `supabaseUrl` to the project URL and `supabaseAnonKey` to the project's **publishable/anon** key. That key is used by the public page and must have read-only access under the supplied row-level security policy.
 3. In the local Laravel `.env` file, set `SUPABASE_PUBLIC_URL` to the same project URL and `SUPABASE_PUBLIC_SERVICE_ROLE_KEY` to the project's **secret** key. The app sends modern `sb_secret_...` keys only in the `apikey` header; legacy `service_role` JWT keys are also supported. Never put this secret in `config.js`, GitHub, or Vercel.
 4. Run `php artisan basics:sync-public-site` from the Laravel project to publish the initial public-only snapshot.
+
+The public site's **Magpadala ng concern** form submits to the `public_concerns` table. The Laravel dashboard reads new submissions using the server-only service-role key; the notification bell refreshes every minute. Never expose the service-role key in this static site.
 
 The local application synchronizes published announcements, barangay contact details, and active staff names/positions when those records change. It does not send resident records, resident emails, ID images, staff contact numbers, login data, or certificate/blotter data. Announcement images are copied into a public Supabase Storage bucket.
 

@@ -64,11 +64,11 @@
         .about-copy .about-detail { margin-top: 14px; }
         .about-copy .button { margin-top: 8px; background: var(--primary); color: var(--white); }
         .services-section { background: #f5f8fc; }
-        .service-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-        .service-card { min-height: 225px; padding: 28px; border: 1px solid rgba(7,21,46,.08); border-radius: 16px; background: var(--white); box-shadow: 0 8px 24px rgba(7,21,46,.045); transition: transform .2s ease, box-shadow .2s ease; }
+        .service-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
+        .service-card { display: flex; flex: 1 1 245px; max-width: calc(25% - 14px); min-height: 160px; flex-direction: column; padding: 24px; border: 1px solid rgba(7,21,46,.08); border-radius: 16px; background: var(--white); box-shadow: 0 8px 24px rgba(7,21,46,.045); transition: transform .2s ease, box-shadow .2s ease; }
         .service-card:hover { transform: translateY(-4px); box-shadow: 0 16px 34px rgba(7,21,46,.09); }
-        .service-icon { display: grid; width: 50px; height: 50px; margin-bottom: 22px; place-items: center; border-radius: 14px; background: var(--blue-tint); color: var(--primary); font-size: 22px; }
-        .service-card h3 { margin: 0 0 9px; color: var(--navy); font-family: "Segoe UI", Arial, sans-serif; font-size: 18px; font-weight: 800; }
+        .service-icon { display: grid; width: 42px; height: 42px; margin-bottom: 14px; place-items: center; border-radius: 12px; background: var(--blue-tint); color: var(--primary); font-size: 20px; }
+        .service-card h3 { margin: 0; color: var(--navy); font-family: "Segoe UI", Arial, sans-serif; font-size: 16px; font-weight: 800; line-height: 1.45; }
         .service-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
         .help-section { padding-top: 0; background: #f5f8fc; }
         .help-panel { display: grid; grid-template-columns: .8fr 1.2fr; gap: 38px; padding: 34px; border: 1px solid #dbe3ee; border-radius: 18px; background: var(--white); }
@@ -114,7 +114,8 @@
         .staff-card { padding: 24px; border: 1px solid var(--line); border-radius: 16px; background: var(--white); box-shadow: 0 8px 24px rgba(7,21,46,.045); }
         .staff-card h3 { margin: 0; color: var(--navy); font-size: 17px; font-weight: 800; line-height: 1.4; }
         .staff-card p { margin: 8px 0 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
-        .empty-staff { padding: 28px 20px; border: 1px dashed #cbd5e1; border-radius: 14px; color: var(--muted); text-align: center; }
+        .staff-grid:has(.empty-staff) { grid-template-columns: minmax(0, 1fr); }
+        .empty-staff { width: min(100%, 560px); margin: 0 auto; padding: 28px 20px; border: 1px dashed #cbd5e1; border-radius: 14px; color: var(--muted); text-align: center; }
         .contact-section { padding-top: 25px; }
         .contact-card { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 32px; padding: 42px 46px; border: 1px solid rgba(255,255,255,.12); border-radius: 20px; background: linear-gradient(120deg, #07152e, #12336d); color: var(--white); box-shadow: 0 16px 38px rgba(7,21,46,.15); }
         .contact-card .section-kicker { color: #8bbcff; }
@@ -126,11 +127,28 @@
         .icon-svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; vertical-align: middle; }
         .contact-icon { width: 16px; height: 16px; margin-right: 7px; color: #8bbcff; vertical-align: -3px; }
         .contact-card .button { flex-shrink: 0; background: var(--primary); color: var(--white); }
+        .concern-panel { margin-top: 20px; padding: 30px; border: 1px solid var(--line); border-radius: 18px; background: var(--white); box-shadow: 0 8px 24px rgba(7,21,46,.045); }
+        .concern-panel h2 { margin: 0; color: var(--navy); font-size: 23px; font-weight: 800; }
+        .concern-panel > p { color: var(--muted); font-size: 13px; line-height: 1.7; }
+        .concern-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+        .concern-form label { display: grid; gap: 6px; color: #334155; font-size: 12px; font-weight: 700; }
+        .concern-form input, .concern-form select, .concern-form textarea { width: 100%; padding: 11px 12px; border: 1px solid #cbd5e1; border-radius: 9px; color: var(--ink); background: #fff; font: inherit; font-size: 13px; }
+        .concern-form textarea { min-height: 115px; resize: vertical; }
+        .concern-form .wide { grid-column: 1 / -1; }
+        .concern-form button { justify-self: start; padding: 11px 18px; border: 0; border-radius: 9px; background: var(--primary); color: #fff; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+        .concern-form button:disabled { opacity: .65; cursor: wait; }
+        .concern-message { margin: 0 0 16px; padding: 12px 14px; border-radius: 9px; font-size: 13px; }
+        .concern-message.success { background: #dcfce7; color: #166534; }
+        .concern-message.error { background: #fee2e2; color: #991b1b; }
+        .concern-honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
         .site-footer { padding: 28px; color: #cbd5e1; background: #07152e; }
         .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; max-width: 1144px; margin: 0 auto; font-size: 12px; }
         .footer-brand { display: flex; align-items: center; gap: 10px; }
         .footer-brand img { width: 36px; height: 36px; border-radius: 50%; }
         .footer-inner a { color: #8bbcff; text-decoration: none; }
+        @media (max-width: 1000px) {
+            .service-card { max-width: calc(50% - 9px); }
+        }
         @media (max-width: 850px) {
             .header-inner { flex-wrap: wrap; gap: 12px 20px; }
             .nav-links { justify-content: center; gap: 17px; width: 100%; padding: 8px 0 3px; }
@@ -141,6 +159,7 @@
             .help-panel { grid-template-columns: 1fr; gap: 24px; }
         }
         @media (max-width: 620px) {
+            .service-card { flex-basis: 100%; max-width: 100%; }
             html { scroll-padding-top: 130px; }
             .header-inner { padding: 10px 17px; }
             .brand img { width: 46px; height: 46px; }
@@ -153,14 +172,16 @@
             .hero-art { min-height: 255px; }
             .hero-seal { width: 175px; }
             .section { padding: 62px 20px; }
-            .about-grid, .service-grid, .announcement-grid, .staff-grid { grid-template-columns: 1fr; }
+            .about-grid, .announcement-grid, .staff-grid { grid-template-columns: 1fr; }
             .about-seal-wrap { min-height: 240px; }
             .about-seal-wrap img { width: 155px; }
             .help-panel { padding: 24px 20px; }
-            .service-card { min-height: 0; }
+            .service-card { min-height: 145px; }
             .contact-section { padding: 10px 20px 56px; }
             .contact-card { grid-template-columns: 1fr; gap: 22px; padding: 28px 24px; }
             .contact-card .button { justify-self: start; }
+            .concern-form { grid-template-columns: 1fr; }
+            .concern-form .wide { grid-column: auto; }
             .footer-inner { flex-direction: column; align-items: flex-start; }
         }
         .announcement-grid-single { grid-template-columns: minmax(0, 520px); justify-content: center; }

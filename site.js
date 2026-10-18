@@ -3,6 +3,9 @@
     const status = document.getElementById('announcement-status');
     const announcements = document.getElementById('announcement-list');
     const staffList = document.getElementById('staff-list');
+    const concernForm = document.getElementById('concern-form');
+    const concernStatus = document.getElementById('concern-status');
+    const concernSubmit = document.getElementById('concern-submit');
 
     const setText = (selector, value) => {
         if (!value) return;
@@ -141,6 +144,56 @@
         link.href = `${prefix}${value.replace(/[^\d+]/g, '')}`;
         if (prefix === 'mailto:') link.href = `${prefix}${value}`;
     };
+
+    concernForm?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const formData = new FormData(concernForm);
+        if (formData.get('website')) return;
+
+        concernStatus.hidden = false;
+        concernStatus.className = 'concern-message';
+        concernStatus.textContent = 'Ipinapadala ang iyong concern...';
+        concernSubmit.disabled = true;
+
+        try {
+            if (!config.supabaseUrl || !config.supabaseAnonKey) {
+                throw new Error('Hindi pa naka-configure ang concern submission.');
+            }
+
+            const response = await fetch(
+                `${config.supabaseUrl.replace(/\/$/, '')}/rest/v1/public_concerns`,
+                {
+                    method: 'POST',
+                    headers: {
+                        apikey: config.supabaseAnonKey,
+                        'Content-Type': 'application/json',
+                        Prefer: 'return=minimal'
+                    },
+                    body: JSON.stringify({
+                        sender_name: String(formData.get('sender_name') || '').trim() || null,
+                        contact: String(formData.get('contact') || '').trim() || null,
+                        category: String(formData.get('category') || ''),
+                        message: String(formData.get('message') || '').trim()
+                    })
+                }
+            );
+
+            if (!response.ok) {
+                console.error('Concern submission rejected by Supabase.', response.status);
+                throw new Error('Hindi naipadala ang concern. Pakisubukang muli mamaya.');
+            }
+
+            concernForm.reset();
+            concernStatus.classList.add('success');
+            concernStatus.textContent = 'Natanggap na ang iyong concern. Salamat sa pagpapaalam sa barangay.';
+        } catch (error) {
+            console.error('Unable to submit public concern.', error);
+            concernStatus.classList.add('error');
+            concernStatus.textContent = error.message || 'Hindi naipadala ang concern. Pakisubukang muli mamaya.';
+        } finally {
+            concernSubmit.disabled = false;
+        }
+    });
 
     const loadPublicContent = async () => {
         if (!config.supabaseUrl || !config.supabaseAnonKey) {
