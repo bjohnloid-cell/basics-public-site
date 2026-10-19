@@ -3,10 +3,6 @@
     const status = document.getElementById('announcement-status');
     const announcements = document.getElementById('announcement-list');
     const staffList = document.getElementById('staff-list');
-    const concernForm = document.getElementById('concern-form');
-    const concernStatus = document.getElementById('concern-status');
-    const concernSubmit = document.getElementById('concern-submit');
-    const concernDialog = document.getElementById('concern-dialog');
     const certificateGrid = document.querySelector('.service-grid');
     const certificateDialog = document.getElementById('certificate-request-dialog');
     const certificateForm = document.getElementById('certificate-request-form');
@@ -164,7 +160,7 @@
         certificateForm.reset();
         certificateForm.elements.namedItem('certificate_type').value = certificateType;
         certificateStatus.hidden = true;
-        certificateStatus.className = 'concern-message';
+        certificateStatus.className = 'certificate-request-message';
         certificateDialog.showModal();
         certificateForm.elements.namedItem('requester_name').focus();
     };
@@ -185,22 +181,13 @@
         certificateDialog.close();
     });
 
-    document.getElementById('concern-open')?.addEventListener('click', () => {
-        concernDialog.showModal();
-        concernForm.querySelector('[name="sender_name"]').focus();
-    });
-
-    document.getElementById('concern-close')?.addEventListener('click', () => {
-        concernDialog.close();
-    });
-
     certificateForm?.addEventListener('submit', async (event) => {
         event.preventDefault();
         const formData = new FormData(certificateForm);
         if (formData.get('website')) return;
 
         certificateStatus.hidden = false;
-        certificateStatus.className = 'concern-message';
+        certificateStatus.className = 'certificate-request-message';
         certificateStatus.textContent = 'Ipinapadala ang iyong certificate request...';
         certificateSubmit.disabled = true;
 
@@ -248,56 +235,6 @@
             certificateStatus.textContent = error.message || 'Hindi naipadala ang request. Pakisubukang muli mamaya.';
         } finally {
             certificateSubmit.disabled = false;
-        }
-    });
-
-    concernForm?.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const formData = new FormData(concernForm);
-        if (formData.get('website')) return;
-
-        concernStatus.hidden = false;
-        concernStatus.className = 'concern-message';
-        concernStatus.textContent = 'Ipinapadala ang iyong concern...';
-        concernSubmit.disabled = true;
-
-        try {
-            if (!config.supabaseUrl || !config.supabaseAnonKey) {
-                throw new Error('Hindi pa naka-configure ang concern submission.');
-            }
-
-            const response = await fetch(
-                `${config.supabaseUrl.replace(/\/$/, '')}/rest/v1/public_concerns`,
-                {
-                    method: 'POST',
-                    headers: {
-                        apikey: config.supabaseAnonKey,
-                        'Content-Type': 'application/json',
-                        Prefer: 'return=minimal'
-                    },
-                    body: JSON.stringify({
-                        sender_name: String(formData.get('sender_name') || '').trim() || null,
-                        contact: String(formData.get('contact') || '').trim() || null,
-                        category: String(formData.get('category') || ''),
-                        message: String(formData.get('message') || '').trim()
-                    })
-                }
-            );
-
-            if (!response.ok) {
-                console.error('Concern submission rejected by Supabase.', response.status);
-                throw new Error('Hindi naipadala ang concern. Pakisubukang muli mamaya.');
-            }
-
-            concernForm.reset();
-            concernStatus.classList.add('success');
-            concernStatus.textContent = 'Natanggap na ang iyong concern. Salamat sa pagpapaalam sa barangay.';
-        } catch (error) {
-            console.error('Unable to submit public concern.', error);
-            concernStatus.classList.add('error');
-            concernStatus.textContent = error.message || 'Hindi naipadala ang concern. Pakisubukang muli mamaya.';
-        } finally {
-            concernSubmit.disabled = false;
         }
     });
 
