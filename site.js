@@ -210,9 +210,12 @@
             }
 
             const email = String(formData.get('email') || '').trim();
-            const contactNumber = String(formData.get('contact_number') || '').trim();
-            if (!email && !contactNumber) {
-                throw new Error('Maglagay ng email o contact number para makontak ka ng barangay.');
+            const validIdNumber = String(formData.get('valid_id_number') || '').trim();
+            if (!email) {
+                throw new Error('Maglagay ng email para matanggap ang status ng request.');
+            }
+            if (!validIdNumber) {
+                throw new Error('Ilagay ang numero ng iyong valid ID.');
             }
 
             const response = await fetch(
@@ -227,7 +230,9 @@
                     body: JSON.stringify({
                         requester_name: String(formData.get('requester_name') || '').trim(),
                         email: email || null,
-                        contact_number: contactNumber || null,
+                        contact_number: String(formData.get('contact_number') || '').trim() || null,
+                        valid_id_type: String(formData.get('valid_id_type') || ''),
+                        valid_id_number: validIdNumber,
                         certificate_type: String(formData.get('certificate_type') || ''),
                         purpose: String(formData.get('purpose') || '').trim()
                     })
@@ -241,7 +246,7 @@
 
             certificateForm.reset();
             certificateStatus.classList.add('success');
-            certificateStatus.textContent = 'Natanggap na ang iyong request. Susuriin ito ng barangay staff at makikipag-ugnayan sila sa iyo.';
+            certificateStatus.textContent = 'Natanggap na ang iyong request. Ipapadala sa email mo ang update kapag naaprubahan o tinanggihan ito.';
         } catch (error) {
             console.error('Unable to submit public certificate request.', error);
             certificateStatus.classList.add('error');

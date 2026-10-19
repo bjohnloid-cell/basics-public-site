@@ -170,7 +170,7 @@
                     </div>
                     <button class="certificate-dialog-close" type="button" id="certificate-request-close" aria-label="Close request form">×</button>
                 </div>
-                <p class="certificate-dialog-copy">Submit your details below. Barangay staff will verify your request before approval. Please do not submit ID numbers or photos here; bring your valid ID when staff asks you to visit.</p>
+                <p class="certificate-dialog-copy">Ilagay ang ID type at numero na nakatala sa iyong resident record para ma-verify ng barangay staff. Huwag mag-upload ng larawan ng ID dito. Kailangan ng email para maipadala ang status ng request.</p>
                 <p class="concern-message" id="certificate-request-status" role="status" aria-live="polite" hidden></p>
                 <input type="hidden" name="certificate_type">
                 <div class="concern-honeypot" aria-hidden="true">
@@ -181,12 +181,31 @@
                     <input name="requester_name" maxlength="120" autocomplete="name" required>
                 </label>
                 <label>
-                    Email (opsyonal kung may contact number)
-                    <input name="email" type="email" maxlength="160" autocomplete="email">
+                    Email (dito ipapadala ang status)
+                    <input name="email" type="email" maxlength="160" autocomplete="email" required>
                 </label>
                 <label>
-                    Contact number (opsyonal kung may email)
+                    Contact number (opsyonal)
                     <input name="contact_number" type="tel" maxlength="40" autocomplete="tel">
+                </label>
+                <label>
+                    Uri ng Valid ID
+                    <select name="valid_id_type" required>
+                        <option value="">Pumili ng ID</option>
+                        <option>PhilSys ID</option>
+                        <option>Driver License</option>
+                        <option>Passport</option>
+                        <option>UMID</option>
+                        <option>SSS ID</option>
+                        <option>Senior Citizen ID</option>
+                        <option>Postal ID</option>
+                        <option>PRC ID</option>
+                        <option>Other Valid ID</option>
+                    </select>
+                </label>
+                <label>
+                    Numero ng Valid ID
+                    <input name="valid_id_number" maxlength="100" autocomplete="off" required>
                 </label>
                 <label class="wide">
                     Para saan ang certificate?

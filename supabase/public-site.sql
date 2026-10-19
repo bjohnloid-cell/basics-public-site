@@ -61,6 +61,8 @@ create table if not exists public.public_certificate_request_inbox (
     requester_name text not null,
     email text,
     contact_number text,
+    valid_id_type text,
+    valid_id_number text,
     certificate_type text not null,
     purpose text not null,
     status text not null default 'new',
@@ -82,6 +84,13 @@ create table if not exists public.public_certificate_request_inbox (
         ),
     constraint public_certificate_request_inbox_phone_check
         check (contact_number is null or char_length(btrim(contact_number)) between 1 and 40),
+    constraint public_certificate_request_inbox_valid_id_type_check
+        check (
+            valid_id_type is null
+            or valid_id_type in ('PhilSys ID', 'Driver License', 'Passport', 'UMID', 'SSS ID', 'Senior Citizen ID', 'Postal ID', 'PRC ID', 'Other Valid ID')
+        ),
+    constraint public_certificate_request_inbox_valid_id_number_check
+        check (valid_id_number is null or char_length(btrim(valid_id_number)) between 1 and 100),
     constraint public_certificate_request_inbox_type_check
         check (certificate_type in (
             'Barangay Clearance',
@@ -105,9 +114,24 @@ create table if not exists public.public_certificate_request_inbox (
         check (status in ('new', 'imported'))
 );
 
+alter table public.public_certificate_request_inbox
+    add column if not exists valid_id_type text,
+    add column if not exists valid_id_number text;
+
+alter table public.public_certificate_request_inbox
+    drop constraint if exists public_certificate_request_inbox_valid_id_type_check,
+    add constraint public_certificate_request_inbox_valid_id_type_check
+        check (
+            valid_id_type is null
+            or valid_id_type in ('PhilSys ID', 'Driver License', 'Passport', 'UMID', 'SSS ID', 'Senior Citizen ID', 'Postal ID', 'PRC ID', 'Other Valid ID')
+        ),
+    drop constraint if exists public_certificate_request_inbox_valid_id_number_check,
+    add constraint public_certificate_request_inbox_valid_id_number_check
+        check (valid_id_number is null or char_length(btrim(valid_id_number)) between 1 and 100);
+
 alter table public.public_certificate_request_inbox enable row level security;
 revoke all on table public.public_certificate_request_inbox from anon, authenticated;
-grant insert (requester_name, email, contact_number, certificate_type, purpose)
+grant insert (requester_name, email, contact_number, valid_id_type, valid_id_number, certificate_type, purpose)
     on table public.public_certificate_request_inbox to anon, authenticated;
 grant all on table public.public_certificate_request_inbox to service_role;
 
@@ -123,6 +147,7 @@ create policy "Public can submit certificate requests"
             (email is not null and char_length(btrim(email)) between 1 and 160)
             or (contact_number is not null and char_length(btrim(contact_number)) between 1 and 40)
         )
+        and email is not null
         and (
             email is null
             or (
@@ -131,6 +156,8 @@ create policy "Public can submit certificate requests"
             )
         )
         and (contact_number is null or char_length(btrim(contact_number)) between 1 and 40)
+        and valid_id_type in ('PhilSys ID', 'Driver License', 'Passport', 'UMID', 'SSS ID', 'Senior Citizen ID', 'Postal ID', 'PRC ID', 'Other Valid ID')
+        and char_length(btrim(valid_id_number)) between 1 and 100
         and certificate_type in (
             'Barangay Clearance',
             'Certificate of Indigency',
