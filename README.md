@@ -1,6 +1,6 @@
 # BASICS public website
 
-This folder is the complete Vercel website. Its public homepage matches the locally hosted Barangay Uyong homepage design and remains a static public-facing frontend; visitors can submit certificate requests but cannot read submitted records. The Laravel public homepage separately provides the public concern form. This folder does not contain the Laravel staff application or resident database.
+This folder is the complete Vercel website. Its public homepage matches the locally hosted Barangay Uyong homepage design and remains a static public-facing frontend. Its forms can submit concerns and certificate requests but cannot read submitted records. It does not contain the Laravel staff application or resident database.
 
 ## Supabase setup
 
@@ -9,7 +9,7 @@ This folder is the complete Vercel website. Its public homepage matches the loca
 3. In the local Laravel `.env` file, set `SUPABASE_PUBLIC_URL` to the same project URL and `SUPABASE_PUBLIC_SERVICE_ROLE_KEY` to the project's **secret** key. The app sends modern `sb_secret_...` keys only in the `apikey` header; legacy `service_role` JWT keys are also supported. Never put this secret in `config.js`, GitHub, or Vercel.
 4. Run `php artisan basics:sync-public-site` from the Laravel project to publish the initial public-only snapshot.
 
-Selecting an available certificate on the Vercel site opens a request form that submits to `public_certificate_request_inbox`. The Laravel homepage's concern form submits to `public_concerns`. The Laravel dashboard imports new certificate requests into its `certificate_requests` list, and new concerns and requests appear in the notification bell. Public requests are reviewed and approved in the staff certificate request page. Never expose the service-role key in this static site.
+The public site's **Magpadala ng concern** form submits to `public_concerns`. Selecting an available certificate opens a request form that submits to `public_certificate_request_inbox`. The Laravel dashboard imports new certificate requests into its `certificate_requests` list, and new concerns and requests appear in the notification bell. Public requests are reviewed and approved in the staff certificate request page. Never expose the service-role key in this static site.
 
 The local application synchronizes published announcements, barangay contact details, and active staff names/positions when those records change. It does not send resident records, resident emails, ID images, staff contact numbers, login data, or certificate/blotter data. Announcement images are copied into a public Supabase Storage bucket.
 

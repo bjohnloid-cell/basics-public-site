@@ -130,6 +130,10 @@
         .contact-icon { width: 16px; height: 16px; margin-right: 7px; color: #8bbcff; vertical-align: -3px; }
         .contact-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
         .contact-card .button { flex-shrink: 0; background: var(--primary); color: var(--white); }
+        .concern-open-button { justify-self: auto; gap: 10px; border: 0; cursor: pointer; }
+        .concern-dialog-content { padding: 28px; background: var(--white); }
+        .concern-dialog .certificate-dialog-copy { margin-top: 14px; }
+        .concern-dialog .concern-form { margin-top: 18px; }
         .certificate-dialog { width: min(620px, calc(100% - 32px)); max-height: min(90vh, 760px); overflow-y: auto; padding: 0; border: 0; border-radius: 18px; box-shadow: 0 24px 70px rgba(7,21,46,.28); }
         .certificate-dialog::backdrop { background: rgba(7,21,46,.58); backdrop-filter: blur(3px); }
         .certificate-request-form { padding: 28px; }
@@ -140,17 +144,17 @@
         .certificate-dialog-header .certificate-dialog-close:hover { background: #dce8fb !important; color: var(--navy) !important; }
         .certificate-dialog-header .certificate-dialog-close:focus-visible { outline: 3px solid rgba(15,94,255,.35); outline-offset: 2px; }
         .certificate-dialog-copy { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
-        .certificate-request-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-        .certificate-request-form label { display: grid; gap: 6px; color: #334155; font-size: 12px; font-weight: 700; }
-        .certificate-request-form input, .certificate-request-form select, .certificate-request-form textarea { width: 100%; padding: 11px 12px; border: 1px solid #cbd5e1; border-radius: 9px; color: var(--ink); background: #fff; font: inherit; font-size: 13px; }
-        .certificate-request-form textarea { min-height: 115px; resize: vertical; }
-        .certificate-request-form .wide { grid-column: 1 / -1; }
-        .certificate-request-form button { justify-self: start; padding: 11px 18px; border: 0; border-radius: 9px; background: var(--primary); color: #fff; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
-        .certificate-request-form button:disabled { opacity: .65; cursor: wait; }
-        .certificate-request-message { margin: 0 0 16px; padding: 12px 14px; border-radius: 9px; font-size: 13px; }
-        .certificate-request-message.success { background: #dcfce7; color: #166534; }
-        .certificate-request-message.error { background: #fee2e2; color: #991b1b; }
-        .certificate-request-honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+        .concern-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+        .concern-form label { display: grid; gap: 6px; color: #334155; font-size: 12px; font-weight: 700; }
+        .concern-form input, .concern-form select, .concern-form textarea { width: 100%; padding: 11px 12px; border: 1px solid #cbd5e1; border-radius: 9px; color: var(--ink); background: #fff; font: inherit; font-size: 13px; }
+        .concern-form textarea { min-height: 115px; resize: vertical; }
+        .concern-form .wide { grid-column: 1 / -1; }
+        .concern-form button { justify-self: start; padding: 11px 18px; border: 0; border-radius: 9px; background: var(--primary); color: #fff; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+        .concern-form button:disabled { opacity: .65; cursor: wait; }
+        .concern-message { margin: 0 0 16px; padding: 12px 14px; border-radius: 9px; font-size: 13px; }
+        .concern-message.success { background: #dcfce7; color: #166534; }
+        .concern-message.error { background: #fee2e2; color: #991b1b; }
+        .concern-honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
         .site-footer { padding: 28px; color: #cbd5e1; background: #07152e; }
         .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; max-width: 1144px; margin: 0 auto; font-size: 12px; }
         .footer-brand { display: flex; align-items: center; gap: 10px; }
@@ -190,8 +194,9 @@
             .contact-section { padding: 10px 20px 56px; }
             .contact-card { grid-template-columns: 1fr; gap: 22px; padding: 28px 24px; }
             .contact-actions { align-items: flex-start; }
-            .certificate-request-form { grid-template-columns: 1fr; }
-            .certificate-request-form .wide { grid-column: auto; }
+            .concern-dialog-content { padding: 22px 18px; }
+            .concern-form { grid-template-columns: 1fr; }
+            .concern-form .wide { grid-column: auto; }
             .certificate-request-form { padding: 22px 18px; }
             .certificate-dialog-header, .certificate-dialog-copy { grid-column: auto; }
             .footer-inner { flex-direction: column; align-items: flex-start; }

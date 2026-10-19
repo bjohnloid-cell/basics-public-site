@@ -162,7 +162,7 @@
         </section>
 
         <dialog class="certificate-dialog" id="certificate-request-dialog" aria-labelledby="certificate-request-title">
-            <form class="certificate-request-form" id="certificate-request-form">
+            <form class="concern-form certificate-request-form" id="certificate-request-form">
                 <div class="certificate-dialog-header">
                     <div>
                         <p class="section-kicker">Request a document</p>
@@ -171,9 +171,9 @@
                     <button class="certificate-dialog-close" type="button" id="certificate-request-close" aria-label="Close request form">×</button>
                 </div>
                 <p class="certificate-dialog-copy">Submit your details below. Barangay staff will verify your request before approval. Please do not submit ID numbers or photos here; bring your valid ID when staff asks you to visit.</p>
-                <p class="certificate-request-message" id="certificate-request-status" role="status" aria-live="polite" hidden></p>
+                <p class="concern-message" id="certificate-request-status" role="status" aria-live="polite" hidden></p>
                 <input type="hidden" name="certificate_type">
-                <div class="certificate-request-honeypot" aria-hidden="true">
+                <div class="concern-honeypot" aria-hidden="true">
                     <label>Leave this field empty<input name="website" tabindex="-1" autocomplete="off"></label>
                 </div>
                 <label class="wide">
@@ -317,11 +317,57 @@
                     </div>
                     <div class="contact-actions">
                         <a class="button" href="mailto:basicbarangay2402@gmail.com" data-contact-cta>Contact the barangay <span aria-hidden="true">→</span></a>
+                        <button class="button concern-open-button" type="button" id="concern-open">
+                            <span>Magpadala ng concern</span>
+                            <span aria-hidden="true">→</span>
+                        </button>
                     </div>
                 </div>
             </div>
         </section>
     </main>
+
+    <dialog class="certificate-dialog concern-dialog" id="concern-dialog" aria-labelledby="concern-dialog-title">
+        <div class="concern-dialog-content">
+            <div class="certificate-dialog-header">
+                <div>
+                    <p class="section-kicker">We’re here to help</p>
+                    <h2 id="concern-dialog-title">Magpadala ng concern</h2>
+                </div>
+                <button class="certificate-dialog-close" type="button" id="concern-close" aria-label="Close concern form">×</button>
+            </div>
+            <p class="certificate-dialog-copy">Ipaabot ang iyong concern sa barangay staff. Huwag maglagay ng sensitibong impormasyon. Para sa agarang emergency, direktang tumawag o pumunta sa kinauukulang tanggapan.</p>
+            <p class="concern-message" id="concern-status" role="status" aria-live="polite" hidden></p>
+            <form class="concern-form" id="concern-form">
+                <div class="concern-honeypot" aria-hidden="true">
+                    <label>Leave this field empty<input name="website" tabindex="-1" autocomplete="off"></label>
+                </div>
+                <label>
+                    Pangalan (opsyonal)
+                    <input name="sender_name" maxlength="120" autocomplete="name">
+                </label>
+                <label>
+                    Contact details (opsyonal)
+                    <input name="contact" maxlength="160" placeholder="Phone number or email" autocomplete="email">
+                </label>
+                <label class="wide">
+                    Uri ng concern
+                    <select name="category" required>
+                        <option value="">Pumili ng uri</option>
+                        <option>Certificate or service</option>
+                        <option>Resident record</option>
+                        <option>Community concern</option>
+                        <option>Other</option>
+                    </select>
+                </label>
+                <label class="wide">
+                    Detalye ng concern
+                    <textarea name="message" minlength="10" maxlength="2000" required></textarea>
+                </label>
+                <button type="submit" id="concern-submit">Ipadala ang concern</button>
+            </form>
+        </div>
+    </dialog>
 
     <footer class="site-footer">
         <div class="footer-inner">
