@@ -56,6 +56,100 @@ create policy "Public can submit concerns"
         and (contact is null or char_length(contact) <= 160)
     );
 
+create table if not exists public.public_certificate_request_inbox (
+    id uuid primary key default gen_random_uuid(),
+    requester_name text not null,
+    email text,
+    contact_number text,
+    certificate_type text not null,
+    purpose text not null,
+    status text not null default 'new',
+    created_at timestamptz not null default now(),
+    constraint public_certificate_request_inbox_name_check
+        check (char_length(btrim(requester_name)) between 1 and 120),
+    constraint public_certificate_request_inbox_contact_check
+        check (
+            (email is not null and char_length(btrim(email)) between 1 and 160)
+            or (contact_number is not null and char_length(btrim(contact_number)) between 1 and 40)
+        ),
+    constraint public_certificate_request_inbox_email_check
+        check (
+            email is null
+            or (
+                char_length(btrim(email)) <= 160
+                and email ~* '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]+$'
+            )
+        ),
+    constraint public_certificate_request_inbox_phone_check
+        check (contact_number is null or char_length(btrim(contact_number)) between 1 and 40),
+    constraint public_certificate_request_inbox_type_check
+        check (certificate_type in (
+            'Barangay Clearance',
+            'Certificate of Indigency',
+            'Certificate of Residency',
+            'Certificate of Good Moral Character',
+            'Character Reference',
+            'Certificate of Late Registration (Civil Registrar)',
+            'Certificate of Death',
+            'Permit to Solicit / Ask for Donations',
+            'Amicable Settlement',
+            'Certificate of Recommendation',
+            'Affidavit of Undertaking',
+            'Affidavit for Solo Parent',
+            'Barangay Business Clearance',
+            'Certificate of Solo Parent'
+        )),
+    constraint public_certificate_request_inbox_purpose_check
+        check (char_length(btrim(purpose)) between 10 and 1000),
+    constraint public_certificate_request_inbox_status_check
+        check (status in ('new', 'imported'))
+);
+
+alter table public.public_certificate_request_inbox enable row level security;
+revoke all on table public.public_certificate_request_inbox from anon, authenticated;
+grant insert (requester_name, email, contact_number, certificate_type, purpose)
+    on table public.public_certificate_request_inbox to anon, authenticated;
+grant all on table public.public_certificate_request_inbox to service_role;
+
+drop policy if exists "Public can submit certificate requests" on public.public_certificate_request_inbox;
+create policy "Public can submit certificate requests"
+    on public.public_certificate_request_inbox
+    for insert
+    to anon, authenticated
+    with check (
+        status = 'new'
+        and char_length(btrim(requester_name)) between 1 and 120
+        and (
+            (email is not null and char_length(btrim(email)) between 1 and 160)
+            or (contact_number is not null and char_length(btrim(contact_number)) between 1 and 40)
+        )
+        and (
+            email is null
+            or (
+                char_length(btrim(email)) <= 160
+                and email ~* '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]+$'
+            )
+        )
+        and (contact_number is null or char_length(btrim(contact_number)) between 1 and 40)
+        and certificate_type in (
+            'Barangay Clearance',
+            'Certificate of Indigency',
+            'Certificate of Residency',
+            'Certificate of Good Moral Character',
+            'Character Reference',
+            'Certificate of Late Registration (Civil Registrar)',
+            'Certificate of Death',
+            'Permit to Solicit / Ask for Donations',
+            'Amicable Settlement',
+            'Certificate of Recommendation',
+            'Affidavit of Undertaking',
+            'Affidavit for Solo Parent',
+            'Barangay Business Clearance',
+            'Certificate of Solo Parent'
+        )
+        and char_length(btrim(purpose)) between 10 and 1000
+    );
+
 do $$
 begin
     if to_regclass('public.public_certificate_requests') is not null then

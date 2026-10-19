@@ -6,6 +6,12 @@
     const concernForm = document.getElementById('concern-form');
     const concernStatus = document.getElementById('concern-status');
     const concernSubmit = document.getElementById('concern-submit');
+    const concernDialog = document.getElementById('concern-dialog');
+    const certificateGrid = document.querySelector('.service-grid');
+    const certificateDialog = document.getElementById('certificate-request-dialog');
+    const certificateForm = document.getElementById('certificate-request-form');
+    const certificateStatus = document.getElementById('certificate-request-status');
+    const certificateSubmit = document.getElementById('certificate-request-submit');
 
     const setText = (selector, value) => {
         if (!value) return;
@@ -144,6 +150,106 @@
         link.href = `${prefix}${value.replace(/[^\d+]/g, '')}`;
         if (prefix === 'mailto:') link.href = `${prefix}${value}`;
     };
+
+    certificateGrid?.querySelectorAll('.service-card').forEach((card) => {
+        card.setAttribute('role', 'button');
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('aria-label', `Request ${card.querySelector('h3')?.textContent.trim() || 'certificate'}`);
+    });
+
+    const openCertificateRequest = (card) => {
+        const certificateType = card.querySelector('h3')?.textContent.trim();
+        if (!certificateType || !certificateForm || !certificateDialog) return;
+
+        certificateForm.reset();
+        certificateForm.elements.namedItem('certificate_type').value = certificateType;
+        certificateStatus.hidden = true;
+        certificateStatus.className = 'concern-message';
+        certificateDialog.showModal();
+        certificateForm.elements.namedItem('requester_name').focus();
+    };
+
+    certificateGrid?.addEventListener('click', (event) => {
+        const card = event.target.closest('.service-card');
+        if (card) openCertificateRequest(card);
+    });
+
+    certificateGrid?.addEventListener('keydown', (event) => {
+        if (event.target.matches('.service-card') && (event.key === 'Enter' || event.key === ' ')) {
+            event.preventDefault();
+            openCertificateRequest(event.target);
+        }
+    });
+
+    document.getElementById('certificate-request-close')?.addEventListener('click', () => {
+        certificateDialog.close();
+    });
+
+    document.getElementById('concern-open')?.addEventListener('click', () => {
+        concernDialog.showModal();
+        concernForm.querySelector('[name="sender_name"]').focus();
+    });
+
+    document.getElementById('concern-close')?.addEventListener('click', () => {
+        concernDialog.close();
+    });
+
+    certificateForm?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const formData = new FormData(certificateForm);
+        if (formData.get('website')) return;
+
+        certificateStatus.hidden = false;
+        certificateStatus.className = 'concern-message';
+        certificateStatus.textContent = 'Ipinapadala ang iyong certificate request...';
+        certificateSubmit.disabled = true;
+
+        try {
+            if (!config.supabaseUrl || !config.supabaseAnonKey) {
+                throw new Error('Hindi pa naka-configure ang certificate request submission.');
+            }
+
+            const email = String(formData.get('email') || '').trim();
+            const contactNumber = String(formData.get('contact_number') || '').trim();
+            if (!email && !contactNumber) {
+                throw new Error('Maglagay ng email o contact number para makontak ka ng barangay.');
+            }
+
+            const response = await fetch(
+                `${config.supabaseUrl.replace(/\/$/, '')}/rest/v1/public_certificate_request_inbox`,
+                {
+                    method: 'POST',
+                    headers: {
+                        apikey: config.supabaseAnonKey,
+                        'Content-Type': 'application/json',
+                        Prefer: 'return=minimal'
+                    },
+                    body: JSON.stringify({
+                        requester_name: String(formData.get('requester_name') || '').trim(),
+                        email: email || null,
+                        contact_number: contactNumber || null,
+                        certificate_type: String(formData.get('certificate_type') || ''),
+                        purpose: String(formData.get('purpose') || '').trim()
+                    })
+                }
+            );
+
+            if (!response.ok) {
+                console.error('Certificate request submission rejected by Supabase.', response.status);
+                throw new Error('Hindi naipadala ang request. Pakisubukang muli mamaya.');
+            }
+
+            certificateForm.reset();
+            certificateStatus.classList.add('success');
+            certificateStatus.textContent = 'Natanggap na ang iyong request. Susuriin ito ng barangay staff at makikipag-ugnayan sila sa iyo.';
+        } catch (error) {
+            console.error('Unable to submit public certificate request.', error);
+            certificateStatus.classList.add('error');
+            certificateStatus.textContent = error.message || 'Hindi naipadala ang request. Pakisubukang muli mamaya.';
+        } finally {
+            certificateSubmit.disabled = false;
+        }
+    });
 
     concernForm?.addEventListener('submit', async (event) => {
         event.preventDefault();

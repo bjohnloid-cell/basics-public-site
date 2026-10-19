@@ -1,15 +1,15 @@
 # BASICS public website
 
-This folder is the complete Vercel website. Its public homepage matches the locally hosted Barangay Uyong homepage design, while remaining a static, read-only frontend. It does not contain the Laravel staff application or resident database.
+This folder is the complete Vercel website. Its public homepage matches the locally hosted Barangay Uyong homepage design and remains a static public-facing frontend; its forms can submit concerns and certificate requests but cannot read submitted records. It does not contain the Laravel staff application or resident database.
 
 ## Supabase setup
 
-1. Create a Supabase project and run [`supabase/public-site.sql`](supabase/public-site.sql) in its SQL Editor. If you already set up the public site, run the updated SQL file again to add the public concern inbox. It creates an insert-only public policy; only the Laravel service-role key can read or update submitted concerns.
+1. Create a Supabase project and run [`supabase/public-site.sql`](supabase/public-site.sql) in its SQL Editor. If you already set up the public site, run the updated SQL file again to add the public concern and certificate request inboxes. Public users can only submit these records; only the Laravel service-role key can read or update them.
 2. In this folder's `config.js`, set `supabaseUrl` to the project URL and `supabaseAnonKey` to the project's **publishable/anon** key. That key is used by the public page and must have read-only access under the supplied row-level security policy.
 3. In the local Laravel `.env` file, set `SUPABASE_PUBLIC_URL` to the same project URL and `SUPABASE_PUBLIC_SERVICE_ROLE_KEY` to the project's **secret** key. The app sends modern `sb_secret_...` keys only in the `apikey` header; legacy `service_role` JWT keys are also supported. Never put this secret in `config.js`, GitHub, or Vercel.
 4. Run `php artisan basics:sync-public-site` from the Laravel project to publish the initial public-only snapshot.
 
-The public site's **Magpadala ng concern** form submits to the `public_concerns` table. The Laravel dashboard reads new submissions using the server-only service-role key; the notification bell refreshes every minute. Never expose the service-role key in this static site.
+The public site's **Magpadala ng concern** form submits to `public_concerns`. Selecting an available certificate opens a request form that submits to `public_certificate_request_inbox`. The Laravel dashboard imports new certificate requests into its `certificate_requests` list, and new concerns and requests appear in the notification bell. Public requests are reviewed and approved in the staff certificate request page. Never expose the service-role key in this static site.
 
 The local application synchronizes published announcements, barangay contact details, and active staff names/positions when those records change. It does not send resident records, resident emails, ID images, staff contact numbers, login data, or certificate/blotter data. Announcement images are copied into a public Supabase Storage bucket.
 

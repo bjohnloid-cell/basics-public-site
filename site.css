@@ -67,6 +67,8 @@
         .service-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
         .service-card { display: flex; flex: 1 1 245px; max-width: calc(25% - 14px); min-height: 160px; flex-direction: column; padding: 24px; border: 1px solid rgba(7,21,46,.08); border-radius: 16px; background: var(--white); box-shadow: 0 8px 24px rgba(7,21,46,.045); transition: transform .2s ease, box-shadow .2s ease; }
         .service-card:hover { transform: translateY(-4px); box-shadow: 0 16px 34px rgba(7,21,46,.09); }
+        .service-card[role="button"] { cursor: pointer; }
+        .service-card[role="button"]:focus-visible { outline: 3px solid rgba(15,94,255,.45); outline-offset: 3px; }
         .service-icon { display: grid; width: 42px; height: 42px; margin-bottom: 14px; place-items: center; border-radius: 12px; background: var(--blue-tint); color: var(--primary); font-size: 20px; }
         .service-card h3 { margin: 0; color: var(--navy); font-family: "Segoe UI", Arial, sans-serif; font-size: 16px; font-weight: 800; line-height: 1.45; }
         .service-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
@@ -117,7 +119,7 @@
         .staff-grid:has(.empty-staff) { grid-template-columns: minmax(0, 1fr); }
         .empty-staff { width: min(100%, 560px); margin: 0 auto; padding: 28px 20px; border: 1px dashed #cbd5e1; border-radius: 14px; color: var(--muted); text-align: center; }
         .contact-section { padding-top: 25px; }
-        .contact-card { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 32px; padding: 42px 46px; border: 1px solid rgba(255,255,255,.12); border-radius: 20px; background: linear-gradient(120deg, #07152e, #12336d); color: var(--white); box-shadow: 0 16px 38px rgba(7,21,46,.15); }
+        .contact-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 28px 32px; padding: 42px 46px; border: 1px solid rgba(255,255,255,.12); border-radius: 20px; background: linear-gradient(120deg, #07152e, #12336d); color: var(--white); box-shadow: 0 16px 38px rgba(7,21,46,.15); }
         .contact-card .section-kicker { color: #8bbcff; }
         .contact-card h2 { margin: 0; font-family: "Segoe UI", Arial, sans-serif; font-size: clamp(26px, 3vw, 36px); font-weight: 800; letter-spacing: -.035em; }
         .contact-card p { margin: 10px 0 0; color: rgba(255,255,255,.78); font-size: 14px; line-height: 1.7; }
@@ -126,10 +128,22 @@
         .contact-details i { width: 22px; color: #8bbcff; }
         .icon-svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; vertical-align: middle; }
         .contact-icon { width: 16px; height: 16px; margin-right: 7px; color: #8bbcff; vertical-align: -3px; }
+        .contact-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
         .contact-card .button { flex-shrink: 0; background: var(--primary); color: var(--white); }
-        .concern-panel { margin-top: 20px; padding: 30px; border: 1px solid var(--line); border-radius: 18px; background: var(--white); box-shadow: 0 8px 24px rgba(7,21,46,.045); }
-        .concern-panel h2 { margin: 0; color: var(--navy); font-size: 23px; font-weight: 800; }
-        .concern-panel > p { color: var(--muted); font-size: 13px; line-height: 1.7; }
+        .concern-open-button { justify-self: auto; gap: 10px; border: 0; cursor: pointer; }
+        .concern-dialog-content { padding: 28px; background: var(--white); }
+        .concern-dialog .certificate-dialog-copy { margin-top: 14px; }
+        .concern-dialog .concern-form { margin-top: 18px; }
+        .certificate-dialog { width: min(620px, calc(100% - 32px)); max-height: min(90vh, 760px); overflow-y: auto; padding: 0; border: 0; border-radius: 18px; box-shadow: 0 24px 70px rgba(7,21,46,.28); }
+        .certificate-dialog::backdrop { background: rgba(7,21,46,.58); backdrop-filter: blur(3px); }
+        .certificate-request-form { padding: 28px; }
+        .certificate-dialog-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; grid-column: 1 / -1; }
+        .certificate-dialog-header h2 { margin: 0; color: var(--navy); font-size: 24px; font-weight: 800; }
+        .certificate-dialog-header .section-kicker { margin-bottom: 6px; }
+        .certificate-dialog-header .certificate-dialog-close { display: inline-flex; width: 36px; height: 36px; flex: 0 0 36px; align-items: center; justify-content: center; margin: 0; padding: 0 !important; border: 0 !important; border-radius: 50% !important; appearance: none; background: #edf2f8 !important; color: var(--ink) !important; font-family: Arial, sans-serif; font-size: 24px !important; font-weight: 600; line-height: 1; box-shadow: none; cursor: pointer; }
+        .certificate-dialog-header .certificate-dialog-close:hover { background: #dce8fb !important; color: var(--navy) !important; }
+        .certificate-dialog-header .certificate-dialog-close:focus-visible { outline: 3px solid rgba(15,94,255,.35); outline-offset: 2px; }
+        .certificate-dialog-copy { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
         .concern-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
         .concern-form label { display: grid; gap: 6px; color: #334155; font-size: 12px; font-weight: 700; }
         .concern-form input, .concern-form select, .concern-form textarea { width: 100%; padding: 11px 12px; border: 1px solid #cbd5e1; border-radius: 9px; color: var(--ink); background: #fff; font: inherit; font-size: 13px; }
@@ -179,9 +193,12 @@
             .service-card { min-height: 145px; }
             .contact-section { padding: 10px 20px 56px; }
             .contact-card { grid-template-columns: 1fr; gap: 22px; padding: 28px 24px; }
-            .contact-card .button { justify-self: start; }
+            .contact-actions { align-items: flex-start; }
+            .concern-dialog-content { padding: 22px 18px; }
             .concern-form { grid-template-columns: 1fr; }
             .concern-form .wide { grid-column: auto; }
+            .certificate-request-form { padding: 22px 18px; }
+            .certificate-dialog-header, .certificate-dialog-copy { grid-column: auto; }
             .footer-inner { flex-direction: column; align-items: flex-start; }
         }
         .announcement-grid-single { grid-template-columns: minmax(0, 520px); justify-content: center; }
