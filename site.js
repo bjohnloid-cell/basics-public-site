@@ -7,6 +7,7 @@
     const concernStatus = document.getElementById('concern-status');
     const concernSubmit = document.getElementById('concern-submit');
     const concernDialog = document.getElementById('concern-dialog');
+    let pendingConcernSubmissionId = null;
     const certificateGrid = document.querySelector('.service-grid');
     const certificateDialog = document.getElementById('certificate-request-dialog');
     const certificateForm = document.getElementById('certificate-request-form');
@@ -271,16 +272,17 @@
                 throw new Error('Hindi pa naka-configure ang concern submission.');
             }
 
+            pendingConcernSubmissionId ||= crypto.randomUUID();
             const response = await fetch(
-                `${config.supabaseUrl.replace(/\/$/, '')}/rest/v1/public_concerns`,
+                `${config.supabaseUrl.replace(/\/$/, '')}/functions/v1/auto-reply-concern`,
                 {
                     method: 'POST',
                     headers: {
                         apikey: config.supabaseAnonKey,
-                        'Content-Type': 'application/json',
-                        Prefer: 'return=minimal'
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
+                        submission_id: pendingConcernSubmissionId,
                         sender_name: String(formData.get('sender_name') || '').trim() || null,
                         contact: String(formData.get('contact') || '').trim() || null,
                         category: String(formData.get('category') || ''),
@@ -289,14 +291,19 @@
                 }
             );
 
-            if (!response.ok) {
+            const result = await response.json().catch(() => null);
+            if (!response.ok || !result?.saved) {
                 console.error('Concern submission rejected by Supabase.', response.status);
+                if (response.status === 429) {
+                    throw new Error('Napakarami nang ipinadalang concern mula sa koneksiyong ito. Pakisubukan muli makalipas ang isang oras.');
+                }
                 throw new Error('Hindi naipadala ang concern. Pakisubukang muli mamaya.');
             }
 
             concernForm.reset();
+            pendingConcernSubmissionId = null;
             concernStatus.classList.add('success');
-            concernStatus.textContent = 'Natanggap na ang iyong concern. Salamat sa pagpapaalam sa barangay.';
+            concernStatus.textContent = 'Natanggap na ang iyong concern. Susuriin ito ng barangay staff at makikipag-ugnayan sila sa iyo kung kailangan.';
         } catch (error) {
             console.error('Unable to submit public concern.', error);
             concernStatus.classList.add('error');
