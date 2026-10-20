@@ -337,7 +337,7 @@
                     <div class="contact-actions">
                         <a class="button" href="mailto:basicbarangay2402@gmail.com" data-contact-cta>Contact the barangay <span aria-hidden="true">→</span></a>
                         <button class="button concern-open-button" type="button" id="concern-open">
-                            <span>Magpadala ng concern</span>
+                            <span>Submit a concern</span>
                             <span aria-hidden="true">→</span>
                         </button>
                     </div>
@@ -351,28 +351,28 @@
             <div class="certificate-dialog-header">
                 <div>
                     <p class="section-kicker">We’re here to help</p>
-                    <h2 id="concern-dialog-title">Magpadala ng concern</h2>
+                    <h2 id="concern-dialog-title">Submit a concern</h2>
                 </div>
                 <button class="certificate-dialog-close" type="button" id="concern-close" aria-label="Close concern form">×</button>
             </div>
-            <p class="certificate-dialog-copy">Ipaabot ang iyong concern sa barangay staff. Huwag maglagay ng sensitibong impormasyon. Para sa agarang emergency, direktang tumawag o pumunta sa kinauukulang tanggapan.</p>
+            <p class="certificate-dialog-copy">Share your concern with barangay staff. Do not include sensitive information. For emergencies, call or visit the appropriate office directly.</p>
             <p class="concern-message" id="concern-status" role="status" aria-live="polite" hidden></p>
             <form class="concern-form" id="concern-form">
                 <div class="concern-honeypot" aria-hidden="true">
                     <label>Leave this field empty<input name="website" tabindex="-1" autocomplete="off"></label>
                 </div>
                 <label>
-                    Pangalan (opsyonal)
+                    Name (optional)
                     <input name="sender_name" maxlength="120" autocomplete="name">
                 </label>
                 <label>
-                    Contact details (opsyonal)
+                    Contact details (optional)
                     <input name="contact" maxlength="160" placeholder="Phone number or email" autocomplete="email">
                 </label>
                 <label class="wide">
-                    Uri ng concern
+                    Concern category
                     <select name="category" required>
-                        <option value="">Pumili ng uri</option>
+                        <option value="">Select a category</option>
                         <option>Certificate or service</option>
                         <option>Resident record</option>
                         <option>Community concern</option>
@@ -380,10 +380,10 @@
                     </select>
                 </label>
                 <label class="wide">
-                    Detalye ng concern
+                    Concern details
                     <textarea name="message" minlength="10" maxlength="2000" required></textarea>
                 </label>
-                <button type="submit" id="concern-submit">Ipadala ang concern</button>
+                <button type="submit" id="concern-submit">Submit concern</button>
             </form>
         </div>
     </dialog>

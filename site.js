@@ -264,12 +264,12 @@
 
         concernStatus.hidden = false;
         concernStatus.className = 'concern-message';
-        concernStatus.textContent = 'Ipinapadala ang iyong concern...';
+        concernStatus.textContent = 'Submitting your concern...';
         concernSubmit.disabled = true;
 
         try {
             if (!config.supabaseUrl || !config.supabaseAnonKey) {
-                throw new Error('Hindi pa naka-configure ang concern submission.');
+                throw new Error('Concern submission is not configured yet.');
             }
 
             pendingConcernSubmissionId ||= crypto.randomUUID();
@@ -295,19 +295,19 @@
             if (!response.ok || !result?.saved) {
                 console.error('Concern submission rejected by Supabase.', response.status);
                 if (response.status === 429) {
-                    throw new Error('Napakarami nang ipinadalang concern mula sa koneksiyong ito. Pakisubukan muli makalipas ang isang oras.');
+                    throw new Error('Too many concerns have been submitted from this connection. Please try again in an hour.');
                 }
-                throw new Error('Hindi naipadala ang concern. Pakisubukang muli mamaya.');
+                throw new Error('Your concern could not be submitted. Please try again later.');
             }
 
             concernForm.reset();
             pendingConcernSubmissionId = null;
             concernStatus.classList.add('success');
-            concernStatus.textContent = 'Natanggap na ang iyong concern. Susuriin ito ng barangay staff at makikipag-ugnayan sila sa iyo kung kailangan.';
+            concernStatus.textContent = 'Your concern has been received. Barangay staff will review it and contact you if needed.';
         } catch (error) {
             console.error('Unable to submit public concern.', error);
             concernStatus.classList.add('error');
-            concernStatus.textContent = error.message || 'Hindi naipadala ang concern. Pakisubukang muli mamaya.';
+            concernStatus.textContent = error.message || 'Your concern could not be submitted. Please try again later.';
         } finally {
             concernSubmit.disabled = false;
         }
