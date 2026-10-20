@@ -7,6 +7,7 @@
     const concernStatus = document.getElementById('concern-status');
     const concernSubmit = document.getElementById('concern-submit');
     const concernDialog = document.getElementById('concern-dialog');
+    const concernDetails = concernForm?.querySelector('[name="message"]');
     let pendingConcernSubmissionId = null;
     const certificateGrid = document.querySelector('.service-grid');
     const certificateDialog = document.getElementById('certificate-request-dialog');
@@ -152,6 +153,17 @@
         if (prefix === 'mailto:') link.href = `${prefix}${value}`;
     };
 
+    const resizeConcernDetails = () => {
+        if (!concernDetails) return;
+
+        concernDetails.style.height = 'auto';
+        const maxHeight = Number.parseFloat(getComputedStyle(concernDetails).maxHeight);
+        concernDetails.style.height = `${Math.min(concernDetails.scrollHeight, maxHeight)}px`;
+        concernDetails.style.overflowY = concernDetails.scrollHeight > maxHeight ? 'auto' : 'hidden';
+    };
+
+    concernDetails?.addEventListener('input', resizeConcernDetails);
+
     certificateGrid?.querySelectorAll('.service-card').forEach((card) => {
         card.setAttribute('role', 'button');
         card.setAttribute('tabindex', '0');
@@ -188,6 +200,7 @@
 
     document.getElementById('concern-open')?.addEventListener('click', () => {
         concernDialog.showModal();
+        resizeConcernDetails();
         concernForm.querySelector('[name="sender_name"]').focus();
     });
 
@@ -301,6 +314,7 @@
             }
 
             concernForm.reset();
+            requestAnimationFrame(resizeConcernDetails);
             pendingConcernSubmissionId = null;
             concernStatus.classList.add('success');
             concernStatus.textContent = 'Your concern has been received. Barangay staff will review it and contact you if needed.';
