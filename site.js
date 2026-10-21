@@ -9,11 +9,14 @@
     const concernDialog = document.getElementById('concern-dialog');
     const concernDetails = concernForm?.querySelector('[name="message"]');
     let pendingConcernSubmissionId = null;
+    let concernSubmissionInFlight = false;
     const certificateGrid = document.querySelector('.service-grid');
     const certificateDialog = document.getElementById('certificate-request-dialog');
     const certificateForm = document.getElementById('certificate-request-form');
     const certificateStatus = document.getElementById('certificate-request-status');
     const certificateSubmit = document.getElementById('certificate-request-submit');
+    let pendingCertificateSubmissionId = null;
+    let certificateSubmissionInFlight = false;
 
     const setText = (selector, value) => {
         if (!value) return;
@@ -164,6 +167,24 @@
 
     concernDetails?.addEventListener('input', resizeConcernDetails);
 
+    const setSubmissionFieldsDisabled = (form, disabled) => {
+        form.querySelectorAll('input:not([type="hidden"]), select, textarea')
+            .forEach((field) => { field.disabled = disabled; });
+    };
+
+    certificateForm?.addEventListener('input', () => {
+        if (!certificateSubmissionInFlight) pendingCertificateSubmissionId = null;
+    });
+    certificateForm?.addEventListener('change', () => {
+        if (!certificateSubmissionInFlight) pendingCertificateSubmissionId = null;
+    });
+    concernForm?.addEventListener('input', () => {
+        if (!concernSubmissionInFlight) pendingConcernSubmissionId = null;
+    });
+    concernForm?.addEventListener('change', () => {
+        if (!concernSubmissionInFlight) pendingConcernSubmissionId = null;
+    });
+
     certificateGrid?.querySelectorAll('.service-card').forEach((card) => {
         card.setAttribute('role', 'button');
         card.setAttribute('tabindex', '0');
@@ -210,13 +231,17 @@
 
     certificateForm?.addEventListener('submit', async (event) => {
         event.preventDefault();
+        if (certificateSubmissionInFlight) return;
+
         const formData = new FormData(certificateForm);
         if (formData.get('website')) return;
 
+        certificateSubmissionInFlight = true;
         certificateStatus.hidden = false;
         certificateStatus.className = 'concern-message';
         certificateStatus.textContent = 'Ipinapadala ang iyong certificate request...';
         certificateSubmit.disabled = true;
+        setSubmissionFieldsDisabled(certificateForm, true);
 
         try {
             if (!config.supabaseUrl || !config.supabaseAnonKey) {
@@ -232,16 +257,17 @@
                 throw new Error('Ilagay ang numero ng iyong valid ID.');
             }
 
+            pendingCertificateSubmissionId ||= crypto.randomUUID();
             const response = await fetch(
-                `${config.supabaseUrl.replace(/\/$/, '')}/rest/v1/public_certificate_request_inbox`,
+                `${config.supabaseUrl.replace(/\/$/, '')}/functions/v1/submit-public-certificate-request`,
                 {
                     method: 'POST',
                     headers: {
                         apikey: config.supabaseAnonKey,
-                        'Content-Type': 'application/json',
-                        Prefer: 'return=minimal'
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
+                        submission_id: pendingCertificateSubmissionId,
                         requester_name: String(formData.get('requester_name') || '').trim(),
                         email: email || null,
                         contact_number: String(formData.get('contact_number') || '').trim() || null,
@@ -253,12 +279,17 @@
                 }
             );
 
-            if (!response.ok) {
+            const result = await response.json().catch(() => null);
+            if (!response.ok || !result?.saved) {
                 console.error('Certificate request submission rejected by Supabase.', response.status);
+                if (response.status === 429) {
+                    throw new Error('Too many submissions. Please try again in an hour.');
+                }
                 throw new Error('Hindi naipadala ang request. Pakisubukang muli mamaya.');
             }
 
             certificateForm.reset();
+            pendingCertificateSubmissionId = null;
             certificateStatus.classList.add('success');
             certificateStatus.textContent = 'Natanggap na ang iyong request. Ipapadala sa email mo ang update kapag naaprubahan o tinanggihan ito.';
         } catch (error) {
@@ -267,18 +298,24 @@
             certificateStatus.textContent = error.message || 'Hindi naipadala ang request. Pakisubukang muli mamaya.';
         } finally {
             certificateSubmit.disabled = false;
+            setSubmissionFieldsDisabled(certificateForm, false);
+            certificateSubmissionInFlight = false;
         }
     });
 
     concernForm?.addEventListener('submit', async (event) => {
         event.preventDefault();
+        if (concernSubmissionInFlight) return;
+
         const formData = new FormData(concernForm);
         if (formData.get('website')) return;
 
+        concernSubmissionInFlight = true;
         concernStatus.hidden = false;
         concernStatus.className = 'concern-message';
         concernStatus.textContent = 'Submitting your concern...';
         concernSubmit.disabled = true;
+        setSubmissionFieldsDisabled(concernForm, true);
 
         try {
             if (!config.supabaseUrl || !config.supabaseAnonKey) {
@@ -324,6 +361,8 @@
             concernStatus.textContent = error.message || 'Your concern could not be submitted. Please try again later.';
         } finally {
             concernSubmit.disabled = false;
+            setSubmissionFieldsDisabled(concernForm, false);
+            concernSubmissionInFlight = false;
         }
     });
 
