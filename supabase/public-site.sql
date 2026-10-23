@@ -101,7 +101,7 @@ begin
             else public.public_concern_rate_limits.request_count + 1
         end,
         updated_at = now()
-    returning request_count <= 3 into request_allowed;
+    returning request_count <= 2 into request_allowed;
 
     return request_allowed;
 end;
