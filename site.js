@@ -347,7 +347,7 @@
                 if (response.status === 429) {
                     throw new Error('Too many concerns have been submitted from this connection. Please try again in an hour.');
                 }
-                throw new Error('Your concern could not be submitted. Please try again later.');
+                throw new Error(result?.error || 'Your concern could not be submitted. Please try again later.');
             }
 
             concernForm.reset();
