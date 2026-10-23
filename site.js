@@ -283,7 +283,7 @@
             if (!response.ok || !result?.saved) {
                 console.error('Certificate request submission rejected by Supabase.', response.status);
                 if (response.status === 429) {
-                    throw new Error('Too many submissions. Please try again in an hour.');
+                    throw new Error('Tatlong certificate request na ang naipadala mula sa koneksyong ito. Pakisubukang muli pagkalipas ng isang oras.');
                 }
                 throw new Error('Hindi naipadala ang request. Pakisubukang muli mamaya.');
             }
