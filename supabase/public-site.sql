@@ -25,6 +25,7 @@ create table if not exists public.public_concerns (
     message text not null,
     status text not null default 'new',
     created_at timestamptz not null default now(),
+    submission_id uuid,
     constraint public_concerns_category_check
         check (category in ('Certificate or service', 'Resident record', 'Community concern', 'Other')),
     constraint public_concerns_message_check
@@ -37,27 +38,81 @@ create table if not exists public.public_concerns (
         check (status in ('new', 'reviewed'))
 );
 
+alter table public.public_concerns
+    add column if not exists submission_id uuid;
+
+create unique index if not exists public_concerns_submission_id_unique
+    on public.public_concerns (submission_id);
+
 alter table public.public_concerns enable row level security;
 revoke all on table public.public_concerns from anon, authenticated;
-grant insert (sender_name, contact, category, message) on table public.public_concerns to anon, authenticated;
-grant usage, select on sequence public.public_concerns_id_seq to anon, authenticated;
+revoke all on sequence public.public_concerns_id_seq from anon, authenticated;
 grant all on table public.public_concerns to service_role;
+grant usage, select on sequence public.public_concerns_id_seq to service_role;
 
 drop policy if exists "Public can submit concerns" on public.public_concerns;
-create policy "Public can submit concerns"
-    on public.public_concerns
-    for insert
-    to anon, authenticated
-    with check (
-        status = 'new'
-        and category in ('Certificate or service', 'Resident record', 'Community concern', 'Other')
-        and char_length(btrim(message)) between 10 and 2000
-        and (sender_name is null or char_length(sender_name) <= 120)
-        and (contact is null or char_length(contact) <= 160)
-    );
+
+create table if not exists public.public_concern_rate_limits (
+    ip_hash text primary key,
+    request_count integer not null,
+    window_started_at timestamptz not null,
+    updated_at timestamptz not null default now()
+);
+
+create index if not exists public_concern_rate_limits_updated_at_index
+    on public.public_concern_rate_limits (updated_at);
+
+alter table public.public_concern_rate_limits enable row level security;
+revoke all on table public.public_concern_rate_limits from public, anon, authenticated;
+grant all on table public.public_concern_rate_limits to service_role;
+
+create or replace function public.consume_public_concern_slot(p_ip_hash text)
+returns boolean
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $$
+declare
+    request_allowed boolean;
+begin
+    if p_ip_hash is null or p_ip_hash !~ '^[a-f0-9]{64}$' then
+        return false;
+    end if;
+
+    delete from public.public_concern_rate_limits
+    where updated_at < now() - interval '1 day';
+
+    insert into public.public_concern_rate_limits (
+        ip_hash,
+        request_count,
+        window_started_at,
+        updated_at
+    )
+    values (p_ip_hash, 1, now(), now())
+    on conflict (ip_hash) do update
+    set window_started_at = case
+            when public.public_concern_rate_limits.window_started_at < now() - interval '1 hour'
+                then now()
+            else public.public_concern_rate_limits.window_started_at
+        end,
+        request_count = case
+            when public.public_concern_rate_limits.window_started_at < now() - interval '1 hour'
+                then 1
+            else public.public_concern_rate_limits.request_count + 1
+        end,
+        updated_at = now()
+    returning request_count <= 5 into request_allowed;
+
+    return request_allowed;
+end;
+$$;
+
+revoke all on function public.consume_public_concern_slot(text) from public, anon, authenticated;
+grant execute on function public.consume_public_concern_slot(text) to service_role;
 
 create table if not exists public.public_certificate_request_inbox (
     id uuid primary key default gen_random_uuid(),
+    submission_id uuid,
     requester_name text not null,
     email text,
     contact_number text,
@@ -115,8 +170,70 @@ create table if not exists public.public_certificate_request_inbox (
 );
 
 alter table public.public_certificate_request_inbox
+    add column if not exists submission_id uuid,
     add column if not exists valid_id_type text,
     add column if not exists valid_id_number text;
+
+create or replace function public.keep_latest_unprocessed_concern()
+returns trigger
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $$
+begin
+    if new.status = 'new' and nullif(btrim(new.contact), '') is not null then
+        perform pg_advisory_xact_lock(hashtextextended('concern:' || lower(btrim(new.contact)), 0));
+
+        delete from public.public_concerns
+        where id <> new.id
+            and status = 'new'
+            and lower(btrim(contact)) = lower(btrim(new.contact));
+    end if;
+
+    return new;
+end;
+$$;
+
+drop trigger if exists public_concerns_keep_latest_unprocessed on public.public_concerns;
+create trigger public_concerns_keep_latest_unprocessed
+    after insert on public.public_concerns
+    for each row
+    execute function public.keep_latest_unprocessed_concern();
+
+create or replace function public.keep_latest_unprocessed_certificate_request()
+returns trigger
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $$
+begin
+    if new.status = 'new' and nullif(btrim(new.email), '') is not null then
+        perform pg_advisory_xact_lock(hashtextextended('certificate:' || lower(btrim(new.email)), 0));
+
+        delete from public.public_certificate_request_inbox
+        where id <> new.id
+            and status in ('new', 'imported')
+            and lower(btrim(email)) = lower(btrim(new.email));
+    end if;
+
+    return new;
+end;
+$$;
+
+drop trigger if exists public_certificate_requests_keep_latest_unprocessed
+    on public.public_certificate_request_inbox;
+create trigger public_certificate_requests_keep_latest_unprocessed
+    after insert on public.public_certificate_request_inbox
+    for each row
+    execute function public.keep_latest_unprocessed_certificate_request();
+
+revoke all on function public.keep_latest_unprocessed_concern() from public, anon, authenticated;
+revoke all on function public.keep_latest_unprocessed_certificate_request() from public, anon, authenticated;
+grant execute on function public.keep_latest_unprocessed_concern() to service_role;
+grant execute on function public.keep_latest_unprocessed_certificate_request() to service_role;
+
+create unique index if not exists public_certificate_request_inbox_submission_id_unique
+    on public.public_certificate_request_inbox (submission_id);
 
 alter table public.public_certificate_request_inbox
     drop constraint if exists public_certificate_request_inbox_valid_id_type_check,
@@ -131,51 +248,10 @@ alter table public.public_certificate_request_inbox
 
 alter table public.public_certificate_request_inbox enable row level security;
 revoke all on table public.public_certificate_request_inbox from anon, authenticated;
-grant insert (requester_name, email, contact_number, valid_id_type, valid_id_number, certificate_type, purpose)
-    on table public.public_certificate_request_inbox to anon, authenticated;
+revoke insert on table public.public_certificate_request_inbox from anon, authenticated;
 grant all on table public.public_certificate_request_inbox to service_role;
 
 drop policy if exists "Public can submit certificate requests" on public.public_certificate_request_inbox;
-create policy "Public can submit certificate requests"
-    on public.public_certificate_request_inbox
-    for insert
-    to anon, authenticated
-    with check (
-        status = 'new'
-        and char_length(btrim(requester_name)) between 1 and 120
-        and (
-            (email is not null and char_length(btrim(email)) between 1 and 160)
-            or (contact_number is not null and char_length(btrim(contact_number)) between 1 and 40)
-        )
-        and email is not null
-        and (
-            email is null
-            or (
-                char_length(btrim(email)) <= 160
-                and email ~* '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]+$'
-            )
-        )
-        and (contact_number is null or char_length(btrim(contact_number)) between 1 and 40)
-        and valid_id_type in ('PhilSys ID', 'Driver License', 'Passport', 'UMID', 'SSS ID', 'Senior Citizen ID', 'Postal ID', 'PRC ID', 'Other Valid ID')
-        and char_length(btrim(valid_id_number)) between 1 and 100
-        and certificate_type in (
-            'Barangay Clearance',
-            'Certificate of Indigency',
-            'Certificate of Residency',
-            'Certificate of Good Moral Character',
-            'Character Reference',
-            'Certificate of Late Registration (Civil Registrar)',
-            'Certificate of Death',
-            'Permit to Solicit / Ask for Donations',
-            'Amicable Settlement',
-            'Certificate of Recommendation',
-            'Affidavit of Undertaking',
-            'Affidavit for Solo Parent',
-            'Barangay Business Clearance',
-            'Certificate of Solo Parent'
-        )
-        and char_length(btrim(purpose)) between 10 and 1000
-    );
 
 do $$
 begin
@@ -198,3 +274,5 @@ on conflict (id) do update
 set public = excluded.public,
     file_size_limit = excluded.file_size_limit,
     allowed_mime_types = excluded.allowed_mime_types;
+
+notify pgrst, 'reload schema';
