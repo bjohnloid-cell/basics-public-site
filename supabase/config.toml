@@ -1,0 +1,5 @@
+[functions.auto-reply-concern]
+verify_jwt = false
+
+[functions.submit-public-certificate-request]
+verify_jwt = false
