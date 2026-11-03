@@ -15,6 +15,12 @@
     const certificateForm = document.getElementById('certificate-request-form');
     const certificateStatus = document.getElementById('certificate-request-status');
     const certificateSubmit = document.getElementById('certificate-request-submit');
+    const announcementDialog = document.getElementById('announcement-dialog');
+    const announcementDialogMedia = document.getElementById('announcement-dialog-media');
+    const announcementDialogDate = document.getElementById('announcement-dialog-date');
+    const announcementDialogTitle = document.getElementById('announcement-dialog-title');
+    const announcementDialogSlogan = document.getElementById('announcement-dialog-slogan');
+    const announcementDialogCopy = document.getElementById('announcement-dialog-copy');
     let pendingCertificateSubmissionId = null;
     let certificateSubmissionInFlight = false;
 
@@ -62,6 +68,9 @@
         items.forEach((item) => {
             const card = document.createElement('article');
             card.className = 'announcement-card';
+            card.tabIndex = 0;
+            card.setAttribute('role', 'button');
+            card.setAttribute('aria-label', `View announcement: ${item.title || 'Announcement'}`);
 
             if (item.image_url) {
                 const image = document.createElement('img');
@@ -121,24 +130,40 @@
             content.append(body);
 
             if (fullText.length > 145) {
-                const fullBody = document.createElement('p');
-                fullBody.className = 'announcement-copy announcement-full-copy';
-                fullBody.hidden = true;
-                fullBody.textContent = fullText;
-                content.append(fullBody);
-
                 const more = document.createElement('button');
                 more.className = 'announcement-link';
                 more.type = 'button';
                 more.textContent = 'Read announcement →';
-                more.addEventListener('click', () => {
-                    const expanded = fullBody.hidden;
-                    fullBody.hidden = !expanded;
-                    more.textContent = expanded ? 'Show less ↑' : 'Read announcement →';
-                });
                 content.append(more);
             }
 
+            const openAnnouncement = () => {
+                if (!announcementDialog) return;
+
+                announcementDialogMedia.replaceChildren();
+                if (item.image_url) {
+                    const image = document.createElement('img');
+                    image.src = item.image_url;
+                    image.alt = item.title || 'Announcement image';
+                    announcementDialogMedia.append(image);
+                }
+
+                announcementDialogDate.textContent = date.textContent;
+                announcementDialogDate.dateTime = date.dateTime;
+                announcementDialogTitle.textContent = item.title || '';
+                announcementDialogSlogan.textContent = item.slogan || '';
+                announcementDialogSlogan.hidden = !item.slogan;
+                announcementDialogCopy.textContent = (item.body || '').replace(/<[^>]*>/g, '').trim();
+                announcementDialog.showModal();
+            };
+
+            card.addEventListener('click', openAnnouncement);
+            card.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openAnnouncement();
+                }
+            });
             card.append(content);
             announcements.append(card);
         });
@@ -227,6 +252,14 @@
 
     document.getElementById('concern-close')?.addEventListener('click', () => {
         concernDialog.close();
+    });
+
+    document.getElementById('announcement-dialog-close')?.addEventListener('click', () => {
+        announcementDialog.close();
+    });
+
+    announcementDialog?.addEventListener('click', (event) => {
+        if (event.target === announcementDialog) announcementDialog.close();
     });
 
     certificateForm?.addEventListener('submit', async (event) => {

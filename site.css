@@ -110,6 +110,15 @@
         button.announcement-link { padding: 0; border: 0; background: transparent; font-family: inherit; cursor: pointer; }
         .announcement-copy[hidden] { display: none; }
         .announcement-link:hover { text-decoration: underline; }
+        .announcement-card { cursor: pointer; }
+        .announcement-card:focus-visible { outline: 3px solid rgba(15,94,255,.35); outline-offset: 3px; }
+        .announcement-dialog { width: min(760px, calc(100% - 32px)); }
+        .announcement-dialog-content { overflow: hidden; background: var(--white); }
+        .announcement-dialog-media:empty { display: none; }
+        .announcement-dialog-media img { display: block; width: 100%; max-height: 420px; object-fit: contain; background: #eef3fa; }
+        .announcement-dialog-body { padding: 28px; }
+        .announcement-dialog-body .certificate-dialog-header h2 { margin-top: 6px; }
+        .announcement-dialog-copy { margin: 18px 0 0; color: var(--muted); font-size: 15px; line-height: 1.8; white-space: pre-line; }
         .empty-announcements { padding: 35px 20px; border: 1px dashed #cbd5e1; border-radius: 14px; color: var(--muted); text-align: center; }
         .staff-section { background: #f5f8fc; }
         .staff-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
@@ -195,6 +204,7 @@
             .contact-card { grid-template-columns: 1fr; gap: 22px; padding: 28px 24px; }
             .contact-actions { align-items: flex-start; }
             .concern-dialog-content { padding: 22px 18px; }
+            .announcement-dialog-body { padding: 22px 18px; }
             .concern-form { grid-template-columns: 1fr; }
             .concern-form .wide { grid-column: auto; }
             .certificate-request-form { padding: 22px 18px; }
