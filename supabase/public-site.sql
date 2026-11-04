@@ -110,6 +110,50 @@ $$;
 revoke all on function public.consume_public_concern_slot(text) from public, anon, authenticated;
 grant execute on function public.consume_public_concern_slot(text) to service_role;
 
+create or replace function public.consume_public_certificate_request_slot(p_ip_hash text)
+returns boolean
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $$
+declare
+    request_allowed boolean;
+begin
+    if p_ip_hash is null or p_ip_hash !~ '^[a-f0-9]{64}$' then
+        return false;
+    end if;
+
+    delete from public.public_concern_rate_limits
+    where updated_at < now() - interval '1 day';
+
+    insert into public.public_concern_rate_limits (
+        ip_hash,
+        request_count,
+        window_started_at,
+        updated_at
+    )
+    values (p_ip_hash, 1, now(), now())
+    on conflict (ip_hash) do update
+    set window_started_at = case
+            when public.public_concern_rate_limits.window_started_at < now() - interval '1 hour'
+                then now()
+            else public.public_concern_rate_limits.window_started_at
+        end,
+        request_count = case
+            when public.public_concern_rate_limits.window_started_at < now() - interval '1 hour'
+                then 1
+            else public.public_concern_rate_limits.request_count + 1
+        end,
+        updated_at = now()
+    returning request_count <= 3 into request_allowed;
+
+    return request_allowed;
+end;
+$$;
+
+revoke all on function public.consume_public_certificate_request_slot(text) from public, anon, authenticated;
+grant execute on function public.consume_public_certificate_request_slot(text) to service_role;
+
 create table if not exists public.public_certificate_request_inbox (
     id uuid primary key default gen_random_uuid(),
     submission_id uuid,
@@ -174,6 +218,24 @@ alter table public.public_certificate_request_inbox
     add column if not exists valid_id_type text,
     add column if not exists valid_id_number text;
 
+delete from public.public_certificate_request_inbox duplicate
+using (
+    select id,
+           row_number() over (
+               partition by lower(btrim(email))
+               order by created_at desc, id desc
+           ) as duplicate_rank
+    from public.public_certificate_request_inbox
+    where status = 'new'
+      and nullif(btrim(email), '') is not null
+) ranked
+where duplicate.id = ranked.id
+  and ranked.duplicate_rank > 1;
+
+create unique index if not exists public_certificate_request_inbox_active_email_unique
+    on public.public_certificate_request_inbox (lower(btrim(email)))
+    where status = 'new' and nullif(btrim(email), '') is not null;
+
 create or replace function public.keep_latest_unprocessed_concern()
 returns trigger
 language plpgsql
@@ -223,7 +285,7 @@ $$;
 drop trigger if exists public_certificate_requests_keep_latest_unprocessed
     on public.public_certificate_request_inbox;
 create trigger public_certificate_requests_keep_latest_unprocessed
-    after insert on public.public_certificate_request_inbox
+    before insert on public.public_certificate_request_inbox
     for each row
     execute function public.keep_latest_unprocessed_certificate_request();
 

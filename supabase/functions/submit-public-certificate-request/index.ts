@@ -75,16 +75,26 @@ async function hashIp(serviceKey: string, ipAddress: string): Promise<string> {
     .join("");
 }
 
+async function hashCertificateEmail(serviceKey: string, email: string): Promise<string> {
+  const normalizedEmail = email.trim().toLowerCase();
+  const bytes = new TextEncoder().encode(`${serviceKey}:certificate-email:${normalizedEmail}`);
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  return Array.from(new Uint8Array(digest))
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+}
+
 async function isWithinSubmissionLimit(
   supabaseUrl: string,
   serviceKey: string,
-  ipHash: string,
+  identifierHash: string,
+  rpcName = "consume_public_concern_slot",
 ): Promise<boolean | null> {
   try {
-    const response = await fetch(`${supabaseUrl}/rest/v1/rpc/consume_public_concern_slot`, {
+    const response = await fetch(`${supabaseUrl}/rest/v1/rpc/${rpcName}`, {
       method: "POST",
       headers: adminHeaders(serviceKey),
-      body: JSON.stringify({ p_ip_hash: ipHash }),
+      body: JSON.stringify({ p_ip_hash: identifierHash }),
     });
     if (!response.ok) {
       console.error("Certificate request rate limit could not be checked.", response.status);
@@ -206,16 +216,11 @@ Deno.serve(async (request: Request) => {
     return jsonResponse(origin, { saved: true });
   }
 
-  const ipAddress = request.headers.get("cf-connecting-ip")?.trim();
-  if (!ipAddress) {
-    console.error("Certificate request did not include a trusted source IP address.");
-    return jsonResponse(origin, { error: "Certificate request submission is temporarily unavailable." }, 503);
-  }
-
   const withinLimit = await isWithinSubmissionLimit(
     supabaseUrl,
     serviceKey,
-    await hashIp(serviceKey, ipAddress),
+    await hashCertificateEmail(serviceKey, email),
+    "consume_public_certificate_request_slot",
   );
   if (withinLimit === null) {
     return jsonResponse(origin, { error: "Certificate request submission is temporarily unavailable." }, 503);
@@ -223,7 +228,7 @@ Deno.serve(async (request: Request) => {
   if (!withinLimit) {
     return jsonResponse(
       origin,
-      { error: "Too many certificate requests have been submitted from this connection. Please try again in an hour." },
+      { error: "Tatlong certificate request na ang naipadala gamit ang email na ito. Pakisubukang muli pagkalipas ng isang oras." },
       429,
     );
   }
